@@ -114,7 +114,7 @@ public class PlayerMovementTutorial : MonoBehaviour
 
     private void StateHandler()
     {
-        if (Input.GetKeyDown(crouchKey))
+        if (Input.GetKey(crouchKey))
         { 
             state = MovementState.crouching;
             moveSpeed = crouchSpeed;

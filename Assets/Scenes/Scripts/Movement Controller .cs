@@ -8,12 +8,9 @@ public class PlayerMovementDashing : MonoBehaviour
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;
-
     public float dashSpeed;
     public float dashSpeedChangeFactor;
-
     public float maxYSpeed;
-
     public float groundDrag;
 
     [Header("Jumping")]
@@ -70,6 +67,7 @@ public class PlayerMovementDashing : MonoBehaviour
         readyToJump = true;
 
         startYScale = transform.localScale.y;
+
     }
 
     private void Update()

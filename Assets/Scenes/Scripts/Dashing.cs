@@ -33,6 +33,7 @@ public class Dashing : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovementDashing>();
+        pm.dashing = false;
     }
 
     private void Update()

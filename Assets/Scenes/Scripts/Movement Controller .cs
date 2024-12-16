@@ -138,7 +138,7 @@ public class PlayerMovementDashing : MonoBehaviour
         }
 
         // Mode - Crouching
-        else if (Input.GetKey(crouchKey))
+        else if (Input.GetKey(crouchKey) && grounded)
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;

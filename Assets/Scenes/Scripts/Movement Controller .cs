@@ -22,6 +22,7 @@ public class PlayerMovementDashing : MonoBehaviour
     [Header("Crouching")]
     public float crouchSpeed;
     public float crouchYScale;
+    public float crouchDownForce;
     private float startYScale;
 
     [Header("Keybinds")]
@@ -112,7 +113,7 @@ public class PlayerMovementDashing : MonoBehaviour
         if (Input.GetKeyDown(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
+            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
         // stop crouch

@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-C:\Users\jafes\Documents\Mars
-=======
-C:\Users\jafes\OneDrive\Documents\git repos\Mars
->>>>>>> origin/master

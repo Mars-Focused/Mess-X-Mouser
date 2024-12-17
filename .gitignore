@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/UserSettings
+/Temp
+/Logs
+/Library
+/.vs/Mars
+/.vs/My project (1)/FileContentIndex
+/.vs/My project (1)/v17/.suo
+/.vs/My project (1)/v17/DocumentLayout.backup.json
+/.vs/My project (1)/v17/DocumentLayout.json

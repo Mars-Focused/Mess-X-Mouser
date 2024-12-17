@@ -740,10 +740,10 @@ MonoBehaviour:
   orientation: {fileID: 2077229903}
   playerCam: {fileID: 963194228}
   dashForce: 20
-  dashUpwardForce: 2.5
+  dashUpwardForce: 0
   maxDashYSpeed: 20
   dashDuration: 0.2
-  useCameraForward: 1
+  useCameraForward: 0
   allowAllDirections: 1
   disableGravity: 1
   resetVel: 1
@@ -763,10 +763,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 10
   dashSpeed: 20
-  dashSpeedChangeFactor: 5
+  dashSpeedChangeFactor: 10
   maxYSpeed: 5
   groundDrag: 4
-  jumpForce: 5
+  jumpForce: 20
   jumpCooldown: 0.2
   airMultiplier: 0.1
   crouchSpeed: 5

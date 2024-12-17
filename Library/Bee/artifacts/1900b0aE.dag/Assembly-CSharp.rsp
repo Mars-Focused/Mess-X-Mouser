@@ -353,7 +353,9 @@
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.37f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.Properties.SourceGenerator.dll"
 -analyzer:"C:/Program Files/Unity/Hub/Editor/2022.3.37f1/Editor/Data/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scenes/Scripts/Camera Controller.cs"
+"Assets/Scenes/Scripts/Dashing.cs"
 "Assets/Scenes/Scripts/Movement Controller .cs"
+"Assets/Scenes/Scripts/PrefabCircleSpawner.cs"
 "Assets/Scenes/Scripts/View_Controller.cs"
 -langversion:9.0
 /deterministic

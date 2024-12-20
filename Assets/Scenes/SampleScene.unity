@@ -743,7 +743,7 @@ MonoBehaviour:
   dashUpwardForce: 0
   maxDashYSpeed: 20
   dashDuration: 0.2
-  useCameraForward: 0
+  useCameraForward: 1
   allowAllDirections: 1
   disableGravity: 1
   resetVel: 1
@@ -763,10 +763,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 10
   dashSpeed: 20
-  dashSpeedChangeFactor: 10
-  maxYSpeed: 5
+  dashSpeedChangeFactor: 20
   groundDrag: 4
-  jumpForce: 20
+  jumpForce: 10
   jumpCooldown: 0.2
   airMultiplier: 0.1
   crouchSpeed: 5

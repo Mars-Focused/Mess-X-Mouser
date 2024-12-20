@@ -10,7 +10,6 @@ public class PlayerMovementDashing : MonoBehaviour
     public float walkSpeed;
     public float dashSpeed;
     public float dashSpeedChangeFactor;
-    public float maxYSpeed;
     public float groundDrag;
 
     [Header("Jumping")]
@@ -130,6 +129,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private void StateHandler()
     {
         // Mode - Dashing
+        // TODO: fix Superjumps after Dash-Jumping
         if (dashing)
         {
             state = MovementState.dashing;
@@ -252,9 +252,6 @@ public class PlayerMovementDashing : MonoBehaviour
             }
         }
 
-        // limit y vel
-        if (maxYSpeed != 0 && rb.velocity.y > maxYSpeed)
-            rb.velocity = new Vector3(rb.velocity.x, maxYSpeed, rb.velocity.z);
     }
 
     private void Jump()

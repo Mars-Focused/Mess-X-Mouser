@@ -11,3 +11,8 @@
 /.vs/My project (1)/v17/.suo
 /.vs/My project (1)/v17/DocumentLayout.backup.json
 /.vs/My project (1)/v17/DocumentLayout.json
+/obj/Debug/Assembly-CSharp.csproj.AssemblyReference.cache
+/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/.gitignore.gitignore
+/.plastic/plastic.changes
+/.plastic/plastic.wktree

@@ -51,7 +51,7 @@ public class Dashing : MonoBehaviour
         else dashCdTimer = dashCd;
 
         pm.dashing = true;
-        pm.maxYSpeed = maxDashYSpeed;
+        //pm.maxYSpeed = maxDashYSpeed;
 
         //cam.DoFov(dashFov);
 
@@ -87,7 +87,7 @@ public class Dashing : MonoBehaviour
     private void ResetDash()
     {
         pm.dashing = false;
-        pm.maxYSpeed = 0;
+        //pm.maxYSpeed = 0;
 
         //cam.DoFov(85f);
 

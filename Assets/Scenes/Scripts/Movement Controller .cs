@@ -5,6 +5,8 @@ using TMPro;
 
 public class PlayerMovementDashing : MonoBehaviour
 {
+    //this is just a comment to practice Using Github with Unity.
+
     [Header("Movement")]
     private float moveSpeed;
     public float walkSpeed;

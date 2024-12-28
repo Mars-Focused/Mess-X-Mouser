@@ -12,7 +12,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private float moveSpeed;
     public float walkSpeed;
     public float dashSpeed;
-    public float dashSpeedChangeFactor;
+    public float Decceleration;
     public float groundDrag;
 
     [Header("Jumping")]
@@ -137,7 +137,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
-            speedChangeFactor = dashSpeedChangeFactor;
+            speedChangeFactor = Decceleration;
         }
 
         // Mode - Crouching
@@ -162,6 +162,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
         if (lastState == MovementState.dashing) keepMomentum = true;
+        // if (state == MovementState.air) keepMomentum = true;
 
         if (desiredMoveSpeedHasChanged)
         {

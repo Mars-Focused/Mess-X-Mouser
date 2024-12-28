@@ -763,7 +763,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 10
   dashSpeed: 20
-  dashSpeedChangeFactor: 20
+  Decceleration: 15
   groundDrag: 4
   jumpForce: 10
   jumpCooldown: 0.2

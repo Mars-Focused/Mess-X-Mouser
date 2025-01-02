@@ -5,27 +5,30 @@ using TMPro;
 
 public class PlayerMovementDashing : MonoBehaviour
 {
-    //this is just a comment to practice Using Github with Unity.
-    //2nd comment just to get a feel for it.
-
     [Header("Movement")]
-    private float moveSpeed;
     public float walkSpeed;
-    public float dashSpeed;
-    public float Decceleration;
     public float groundDrag;
+    private float moveSpeed;
 
     [Header("Jumping")]
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
     bool readyToJump;
+    [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
     public float crouchSpeed;
     public float crouchYScale;
     public float crouchDownForce;
     private float startYScale;
+
+    [Header("Dashing")]
+    public float dashEndAccel;
+    public float dashSpeed;
+    public float dashAccel;
+    [HideInInspector] public bool dashEnd;
+    [HideInInspector] public bool dashing;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
@@ -38,14 +41,17 @@ public class PlayerMovementDashing : MonoBehaviour
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
+    public Transform orientation;
     private RaycastHit slopeHit;
     private bool exitingSlope;
 
-
-    public Transform orientation;
-
+    private bool drag;
     float horizontalInput;
     float verticalInput;
+    private float desiredMoveSpeed;
+    private float lastDesiredMoveSpeed;
+    private MovementState lastState;
+    private bool keepMomentum;
 
     Vector3 moveDirection;
 
@@ -57,15 +63,16 @@ public class PlayerMovementDashing : MonoBehaviour
         walking,
         crouching,
         dashing,
+        dashend,
         air
     }
-
-    public bool dashing;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        dashEnd = false;
 
         readyToJump = true;
 
@@ -81,14 +88,15 @@ public class PlayerMovementDashing : MonoBehaviour
         MyInput();
         SpeedControl();
         StateHandler();
+        DragHandler();
+    }
 
-        // handle drag
-        if (state == MovementState.walking || state == MovementState.crouching)
+    private void DragHandler()
+    {
+        if (drag == true)
             rb.drag = groundDrag;
         else
             rb.drag = 0;
-
-        //TextStuff();
     }
 
     private void FixedUpdate()
@@ -105,16 +113,14 @@ public class PlayerMovementDashing : MonoBehaviour
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
-
             Jump();
-
-            Invoke(nameof(ResetJump), jumpCooldown);
         }
 
         // start crouch
         if (Input.GetKeyDown(crouchKey))
         {
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+            ResetYVel();
             rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
@@ -125,19 +131,23 @@ public class PlayerMovementDashing : MonoBehaviour
         }
     }
 
-    private float desiredMoveSpeed;
-    private float lastDesiredMoveSpeed;
-    private MovementState lastState;
-    private bool keepMomentum;
     private void StateHandler()
     {
         // Mode - Dashing
-        // TODO: fix Superjumps after Dash-Jumping
         if (dashing)
         {
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
-            speedChangeFactor = Decceleration;
+            speedChangeFactor = dashAccel;
+            drag = false;
+        }
+
+        else if (dashEnd)
+        {
+            state = MovementState.dashend;
+            desiredMoveSpeed = walkSpeed;
+            speedChangeFactor = dashEndAccel;
+            drag = true;
         }
 
         // Mode - Crouching
@@ -145,6 +155,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.crouching;
             desiredMoveSpeed = crouchSpeed;
+            drag = true;
         }
 
         // Mode - Walking
@@ -152,17 +163,22 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
+            drag = true;
         }
 
         // Mode - Air
         else
         {
             state = MovementState.air;
+            desiredMoveSpeed = walkSpeed;
+            drag = false;
         }
 
-        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
         if (lastState == MovementState.dashing) keepMomentum = true;
+        if (state == MovementState.dashend) keepMomentum = false;
         // if (state == MovementState.air) keepMomentum = true;
+
+        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
 
         if (desiredMoveSpeedHasChanged)
         {
@@ -258,20 +274,25 @@ public class PlayerMovementDashing : MonoBehaviour
 
     }
 
+    private void ResetYVel()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+    }
+
     private void Jump()
     {
         exitingSlope = true;
-
-        // reset y velocity
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
+        jumping = true;
+        Invoke(nameof(ResetJump), jumpCooldown);
+        ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
+
     private void ResetJump()
     {
         readyToJump = true;
-
         exitingSlope = false;
+        jumping = false;
     }
 
     private bool OnSlope()
@@ -289,28 +310,6 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
-
-    //public TextMeshProUGUI text_speed;
-    //public TextMeshProUGUI text_ySpeed;
-    //public TextMeshProUGUI text_mode;
-    /*
-    private void TextStuff()
-    {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        if (OnSlope())
-            text_speed.SetText("Speed: " + Round(rb.velocity.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        else
-            text_speed.SetText("Speed: " + Round(flatVel.magnitude, 1) + " / " + Round(moveSpeed, 1));
-
-        //float yVel = rb.velocity.y;
-        //float yMax = maxYSpeed == 0 ? 0 : maxYSpeed;
-        //text_ySpeed.SetText("YSpeed: " + Round(yVel, 0) + " / " + yMax);
-
-        text_mode.SetText(state.ToString());
-    }
-    */
 
     public static float Round(float value, int digits)
     {

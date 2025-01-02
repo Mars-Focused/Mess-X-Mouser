@@ -740,14 +740,12 @@ MonoBehaviour:
   orientation: {fileID: 2077229903}
   playerCam: {fileID: 963194228}
   dashForce: 20
-  dashUpwardForce: 0
   maxDashYSpeed: 20
   dashDuration: 0.2
-  useCameraForward: 1
+  dashEndDuration: 0.1
   allowAllDirections: 1
-  disableGravity: 1
   resetVel: 1
-  dashCd: 0.2
+  dashCd: 0.5
   dashKey: 304
 --- !u!114 &1551504184
 MonoBehaviour:
@@ -762,8 +760,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
-  dashSpeed: 20
-  Decceleration: 15
   groundDrag: 4
   jumpForce: 10
   jumpCooldown: 0.2
@@ -771,6 +767,11 @@ MonoBehaviour:
   crouchSpeed: 5
   crouchYScale: 0.5
   crouchDownForce: 10
+  dashEndAccel: 5
+  dashSpeed: 20
+  dashAccel: 500
+  dashEnd: 0
+  dashing: 0
   jumpKey: 32
   crouchKey: 306
   playerHeight: 2
@@ -780,7 +781,6 @@ MonoBehaviour:
   maxSlopeAngle: 4
   orientation: {fileID: 2077229903}
   state: 0
-  dashing: 0
 --- !u!1 &1602620452
 GameObject:
   m_ObjectHideFlags: 0

@@ -764,12 +764,13 @@ MonoBehaviour:
   jumpForce: 10
   jumpCooldown: 0.2
   airMultiplier: 0.1
+  jumping: 0
   crouchSpeed: 5
   crouchYScale: 0.5
   crouchDownForce: 10
   dashEndAccel: 5
   dashSpeed: 20
-  dashAccel: 500
+  dashAccel: 4
   dashEnd: 0
   dashing: 0
   jumpKey: 32

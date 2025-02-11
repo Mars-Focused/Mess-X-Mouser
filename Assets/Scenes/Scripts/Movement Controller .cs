@@ -5,8 +5,9 @@ using TMPro;
 
 public class PlayerMovementDashing : MonoBehaviour
 {
-    [Header("Movement")]
+    [Header("Walking")]
     public float walkSpeed;
+    public float walkSpeedChange;
     public float groundDrag;
     private float moveSpeed;
 
@@ -24,9 +25,9 @@ public class PlayerMovementDashing : MonoBehaviour
     private float startYScale;
 
     [Header("Dashing")]
-    public float dashEndAccel;
+    public float dashEndSpeedChange;
     public float dashSpeed;
-    public float dashAccel;
+    public float dashSpeedChange;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
 
@@ -52,6 +53,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
     private bool keepMomentum;
+    private float speedChangeFactor;
 
     Vector3 moveDirection;
 
@@ -138,7 +140,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.dashing;
             desiredMoveSpeed = dashSpeed;
-            speedChangeFactor = dashAccel;
+            speedChangeFactor = dashSpeedChange;
             drag = false;
         }
 
@@ -146,7 +148,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.dashend;
             desiredMoveSpeed = walkSpeed;
-            speedChangeFactor = dashEndAccel;
+            speedChangeFactor = dashEndSpeedChange;
             drag = true;
         }
 
@@ -163,6 +165,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.walking;
             desiredMoveSpeed = walkSpeed;
+            speedChangeFactor = walkSpeedChange;
             drag = true;
         }
 
@@ -176,6 +179,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
         if (lastState == MovementState.dashing) keepMomentum = true;
         if (state == MovementState.dashend) keepMomentum = false;
+        //if (state == MovementState.walking) keepMomentum = false;
         // if (state == MovementState.air) keepMomentum = true;
 
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
@@ -198,7 +202,6 @@ public class PlayerMovementDashing : MonoBehaviour
         lastState = state;
     }
 
-    private float speedChangeFactor;
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
         // smoothly lerp movementSpeed to desired value

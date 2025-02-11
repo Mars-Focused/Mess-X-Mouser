@@ -739,10 +739,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 2077229903}
   playerCam: {fileID: 963194228}
-  dashForce: 20
-  maxDashYSpeed: 20
+  dashForce: 25
+  maxDashYSpeed: 30
   dashDuration: 0.2
-  dashEndDuration: 0.1
+  dashEndDuration: 0.05
   allowAllDirections: 1
   resetVel: 1
   dashCd: 0.5
@@ -768,9 +768,9 @@ MonoBehaviour:
   crouchSpeed: 5
   crouchYScale: 0.5
   crouchDownForce: 10
-  dashEndAccel: 5
-  dashSpeed: 20
-  dashAccel: 4
+  dashEndSpeedChange: 0
+  dashSpeed: 30
+  dashSpeedChange: 0
   dashEnd: 0
   dashing: 0
   jumpKey: 32

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1628768398572172246}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8728995414592571924}
   - component: {fileID: 6242199227456950889}
   - component: {fileID: 1474058593812811147}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,7 +150,7 @@ GameObject:
   - component: {fileID: 5331526721807100533}
   - component: {fileID: 475733599724263867}
   - component: {fileID: 1841315357441140937}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

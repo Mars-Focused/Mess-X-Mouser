@@ -12,14 +12,12 @@ public class Dashing : MonoBehaviour
 
     [Header("Dashing")]
     public float dashForce;
-    public float dashUpwardForce;
     public float maxDashYSpeed;
     public float dashDuration;
+    public float dashEndDuration;
 
     [Header("Settings")]
-    public bool useCameraForward = true;
     public bool allowAllDirections = true;
-    public bool disableGravity = false;
     public bool resetVel = true;
 
     [Header("Cooldown")]
@@ -43,6 +41,9 @@ public class Dashing : MonoBehaviour
 
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
+
+        if (pm.jumping == true)
+            CancelInvoke(nameof(DashEnd));
     }
 
     private void Dash()
@@ -51,28 +52,26 @@ public class Dashing : MonoBehaviour
         else dashCdTimer = dashCd;
 
         pm.dashing = true;
-        pm.maxYSpeed = maxDashYSpeed;
+        //pm.maxYSpeed = maxDashYSpeed;
 
         //cam.DoFov(dashFov);
 
         Transform forwardT;
 
-        if (useCameraForward)
-            forwardT = playerCam; /// where you're looking
-        else
-            forwardT = orientation; /// where you're facing (no up or down)
+        forwardT = orientation; /// where you're facing (no up or down)
 
         Vector3 direction = GetDirection(forwardT);
 
-        Vector3 forceToApply = direction * dashForce + orientation.up * dashUpwardForce;
 
-        if (disableGravity)
-            rb.useGravity = false;
+        Vector3 forceToApply = direction * dashForce;
+
+        rb.useGravity = false;
 
         delayedForceToApply = forceToApply;
         Invoke(nameof(DelayedDashForce), 0.025f);
 
-        Invoke(nameof(ResetDash), dashDuration);
+        Invoke(nameof(DashEnd), dashDuration);
+        Invoke(nameof(ResetDash), dashDuration + dashEndDuration);
     }
 
     private Vector3 delayedForceToApply;
@@ -84,15 +83,17 @@ public class Dashing : MonoBehaviour
         rb.AddForce(delayedForceToApply, ForceMode.Impulse);
     }
 
+    private void DashEnd()
+    {
+        pm.dashing = false;
+        pm.dashEnd = true;
+    }
+
     private void ResetDash()
     {
         pm.dashing = false;
-        pm.maxYSpeed = 0;
-
-        //cam.DoFov(85f);
-
-        if (disableGravity)
-            rb.useGravity = true;
+        pm.dashEnd = false;
+        rb.useGravity = true;
     }
 
     private Vector3 GetDirection(Transform forwardT)

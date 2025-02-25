@@ -135,6 +135,8 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void StateHandler()
     {
+        //try with switch bases on enum 
+
         // Mode - Dashing
         if (dashing)
         {

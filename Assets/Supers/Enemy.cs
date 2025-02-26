@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Assets.Interfaces;
+﻿using Assets.Interfaces;
 
 namespace Assets.Supers
 {
-    abstract class Enemy: IDamagable
+    abstract class Enemy : IDamagable
     {
         float health;
         float damage;
@@ -19,13 +14,13 @@ namespace Assets.Supers
             this.damage = 10;
             this.speed = 10;
         }
-        public Enemy(float health,float damage,float speed)
+        public Enemy(float health, float damage, float speed)
         {
             //code to init an enemy with custom values
             this.health = health;
             this.damage = damage;
             this.speed = speed;
         }
-        
+
     }
 }

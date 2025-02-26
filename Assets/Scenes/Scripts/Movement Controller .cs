@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
@@ -52,7 +51,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
-    private bool keepMomentum;
+    private bool keepMomentum = true;
     private float speedChangeFactor;
 
     Vector3 moveDirection;
@@ -121,6 +120,7 @@ public class PlayerMovementDashing : MonoBehaviour
         // start crouch
         if (Input.GetKeyDown(crouchKey))
         {
+            state = MovementState.crouching;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
             ResetYVel();
             rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
@@ -129,14 +129,61 @@ public class PlayerMovementDashing : MonoBehaviour
         // stop crouch
         if (Input.GetKeyUp(crouchKey))
         {
+            state = MovementState.walking;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
 
     private void StateHandler()
     {
+        if (Input.GetKey(crouchKey) && grounded)
+        {
+            state = MovementState.crouching;
+        }
         //try with switch bases on enum 
+        switch (state)
+        {
+            case MovementState.walking:
+                desiredMoveSpeed = walkSpeed;
+                speedChangeFactor = walkSpeedChange;
+                drag = true;
+                if (!grounded)
+                {
+                    state = MovementState.air;
+                }
+                break;
+            case MovementState.crouching:
+                desiredMoveSpeed = crouchSpeed;
+                drag = true;
+                if (!Input.GetKey(crouchKey))
+                {
+                    state = MovementState.walking;
+                }
+                break;
+            case MovementState.dashing:
+                desiredMoveSpeed = dashSpeed;
+                speedChangeFactor = dashSpeedChange;
+                drag = false;
+                break;
+            case MovementState.dashend:
+                desiredMoveSpeed = walkSpeed;
+                speedChangeFactor = dashEndSpeedChange;
+                drag = true;
+                break;
+            case MovementState.air:
+                desiredMoveSpeed = walkSpeed;
+                drag = false;
+                if (grounded)
+                {
+                    state = MovementState.walking;
+                }
+                break;
+        }
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+        lastState = state;
 
+
+        /*
         // Mode - Dashing
         if (dashing)
         {
@@ -199,9 +246,9 @@ public class PlayerMovementDashing : MonoBehaviour
                 moveSpeed = desiredMoveSpeed;
             }
         }
-
         lastDesiredMoveSpeed = desiredMoveSpeed;
         lastState = state;
+        */
     }
 
     private IEnumerator SmoothlyLerpMoveSpeed()
@@ -229,7 +276,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (state == MovementState.dashing) return;
+        //if (state == MovementState.dashing) return;
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;

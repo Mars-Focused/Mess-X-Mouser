@@ -179,9 +179,23 @@ public class PlayerMovementDashing : MonoBehaviour
                 }
                 break;
         }
-        lastDesiredMoveSpeed = desiredMoveSpeed;
+        //lastDesiredMoveSpeed = desiredMoveSpeed;
         lastState = state;
-
+        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
+        if (desiredMoveSpeedHasChanged)
+        {
+            if (keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                StopAllCoroutines();
+                moveSpeed = desiredMoveSpeed;
+            }
+        }
+        lastDesiredMoveSpeed = desiredMoveSpeed;
 
         /*
         // Mode - Dashing

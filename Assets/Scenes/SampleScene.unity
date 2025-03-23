@@ -760,6 +760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkSpeed: 10
+  walkSpeedChange: 20
   groundDrag: 4
   jumpForce: 10
   jumpCooldown: 0.2

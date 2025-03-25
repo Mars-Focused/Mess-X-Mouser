@@ -120,11 +120,19 @@ public class PlayerMovementDashing : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
+        if (Input.GetKeyDown(dashKey))
+        {
+            Dash();
+            state = MovementState.dashing;
+        }
+ 
+
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
             Jump();
+            state = MovementState.air;
         }
 
         // start crouch
@@ -132,7 +140,7 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.crouching;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            ResetYVel();
+            //ResetYVel();
             rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
@@ -177,6 +185,10 @@ public class PlayerMovementDashing : MonoBehaviour
                 speedChangeFactor = dashSpeedChange;
                 drag = false;
                 useGravity = false;
+                if(Input.GetKey(jumpKey))
+                {
+                    state = MovementState.air;
+                }
                 break;
             case MovementState.dashend:
                 desiredMoveSpeed = walkSpeed;
@@ -194,9 +206,20 @@ public class PlayerMovementDashing : MonoBehaviour
                 }
                 break;
         }
-        //lastDesiredMoveSpeed = desiredMoveSpeed;
+
+        if (lastState == MovementState.dashing && state != MovementState.dashend)
+        {
+            keepMomentum = true;
+        }
+        else
+        {
+            keepMomentum = false;
+        }
+        
         lastState = state;
+        
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
+        lastDesiredMoveSpeed = desiredMoveSpeed;
         if (desiredMoveSpeedHasChanged)
         {
             if (keepMomentum)
@@ -400,9 +423,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void DashUpdates()
     {
-        if (Input.GetKeyDown(dashKey))
-            Dash();
-
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
 
@@ -448,6 +468,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void DashEnd()
     {
+        state = MovementState.dashend;
         dashing = false;
         dashEnd = true;
     }
@@ -457,6 +478,15 @@ public class PlayerMovementDashing : MonoBehaviour
         dashing = false;
         dashEnd = false;
         rb.useGravity = true;
+
+        if (!grounded)
+        {
+            state = MovementState.air;
+        }
+        else
+        {
+            state = MovementState.walking;
+        }
     }
 
     private Vector3 GetDirection(Transform forwardT)

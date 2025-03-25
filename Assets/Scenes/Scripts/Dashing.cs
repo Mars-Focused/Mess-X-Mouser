@@ -4,10 +4,9 @@ using UnityEngine;
 public class Dashing : MonoBehaviour
 {
     [Header("References")]
-    public Transform orientation;
-    public Transform playerCam;
-    private Rigidbody rb;
-    private PlayerMovementDashing pm;
+    public Transform orientation; // <- DON'T TRANSFER
+    private Rigidbody rb; // <- DON'T TRANSFER
+    private PlayerMovementDashing pm; // <- DON'T TRANSFER
 
     [Header("Dashing")]
     public float dashForce;
@@ -28,12 +27,17 @@ public class Dashing : MonoBehaviour
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        pm = GetComponent<PlayerMovementDashing>();
+        rb = GetComponent<Rigidbody>(); // <- DON'T TRANSFER
+        pm = GetComponent<PlayerMovementDashing>(); // <- DON'T TRANSFER
         pm.dashing = false;
     }
 
     private void Update()
+    {
+        DashUpdates();
+    }
+
+    private void DashUpdates()
     {
         if (Input.GetKeyDown(dashKey))
             Dash();
@@ -51,7 +55,6 @@ public class Dashing : MonoBehaviour
         else dashCdTimer = dashCd;
 
         pm.dashing = true;
-        //pm.maxYSpeed = maxDashYSpeed;
 
         //cam.DoFov(dashFov);
 
@@ -102,10 +105,7 @@ public class Dashing : MonoBehaviour
 
         Vector3 direction = new Vector3();
 
-        if (allowAllDirections)
-            direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
-        else
-            direction = forwardT.forward;
+        direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
 
         if (verticalInput == 0 && horizontalInput == 0)
             direction = forwardT.forward;

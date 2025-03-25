@@ -27,6 +27,13 @@ public class PlayerMovementDashing : MonoBehaviour
     public float dashEndSpeedChange;
     public float dashSpeed;
     public float dashSpeedChange;
+    public float dashForce;
+    public float dashDuration;
+    public float dashEndDuration;
+    public bool resetVel = true;
+    public float dashCd;
+    public KeyCode dashKey = KeyCode.LeftShift;
+    private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
 
@@ -41,7 +48,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     [Header("Slope Handling")]
     public float maxSlopeAngle;
-    public Transform orientation;
+    public Transform orientation; // <-ORIENTATION
     private RaycastHit slopeHit;
     private bool exitingSlope;
 
@@ -51,12 +58,13 @@ public class PlayerMovementDashing : MonoBehaviour
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private MovementState lastState;
-    private bool keepMomentum = true;
+    private bool keepMomentum = false;
     private float speedChangeFactor;
+    private bool useGravity;
 
     Vector3 moveDirection;
 
-    Rigidbody rb;
+    Rigidbody rb; // <-RIGIDBODY
 
     public MovementState state;
     public enum MovementState
@@ -74,6 +82,7 @@ public class PlayerMovementDashing : MonoBehaviour
         rb.freezeRotation = true;
 
         dashEnd = false;
+        dashing = false;
 
         readyToJump = true;
 
@@ -87,6 +96,7 @@ public class PlayerMovementDashing : MonoBehaviour
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
+        DashUpdates();
         SpeedControl();
         StateHandler();
         DragHandler();
@@ -146,6 +156,7 @@ public class PlayerMovementDashing : MonoBehaviour
             case MovementState.walking:
                 desiredMoveSpeed = walkSpeed;
                 speedChangeFactor = walkSpeedChange;
+                useGravity = false;
                 drag = true;
                 if (!grounded)
                 {
@@ -155,6 +166,7 @@ public class PlayerMovementDashing : MonoBehaviour
             case MovementState.crouching:
                 desiredMoveSpeed = crouchSpeed;
                 drag = true;
+                useGravity = true;
                 if (!Input.GetKey(crouchKey))
                 {
                     state = MovementState.walking;
@@ -164,15 +176,18 @@ public class PlayerMovementDashing : MonoBehaviour
                 desiredMoveSpeed = dashSpeed;
                 speedChangeFactor = dashSpeedChange;
                 drag = false;
+                useGravity = false;
                 break;
             case MovementState.dashend:
                 desiredMoveSpeed = walkSpeed;
                 speedChangeFactor = dashEndSpeedChange;
                 drag = true;
+                useGravity = false;
                 break;
             case MovementState.air:
                 desiredMoveSpeed = walkSpeed;
                 drag = false;
+                useGravity = true;
                 if (grounded)
                 {
                     state = MovementState.walking;
@@ -313,7 +328,7 @@ public class PlayerMovementDashing : MonoBehaviour
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
 
         // turn gravity off while on slope
-        rb.useGravity = !OnSlope();
+        rb.useGravity = useGravity;
     }
 
     private void SpeedControl()
@@ -381,5 +396,81 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         float mult = Mathf.Pow(10.0f, (float)digits);
         return Mathf.Round(value * mult) / mult;
+    }
+
+    private void DashUpdates()
+    {
+        if (Input.GetKeyDown(dashKey))
+            Dash();
+
+        if (dashCdTimer > 0)
+            dashCdTimer -= Time.deltaTime;
+
+        if (jumping == true)
+            CancelInvoke(nameof(DashEnd));
+    }
+
+    private void Dash()
+    {
+        if (dashCdTimer > 0) return;
+        else dashCdTimer = dashCd;
+
+        dashing = true;
+
+        //cam.DoFov(dashFov);
+
+        Transform forwardT;
+
+        forwardT = orientation; /// where you're facing (no up or down)
+
+        Vector3 direction = GetDirection(forwardT);
+
+
+        Vector3 forceToApply = direction * dashForce;
+
+        rb.useGravity = false;
+
+        delayedForceToApply = forceToApply;
+        Invoke(nameof(DelayedDashForce), 0.025f);
+
+        Invoke(nameof(DashEnd), dashDuration);
+        Invoke(nameof(ResetDash), dashDuration + dashEndDuration);
+    }
+
+    private Vector3 delayedForceToApply;
+    private void DelayedDashForce()
+    {
+        if (resetVel)
+            rb.velocity = Vector3.zero;
+
+        rb.AddForce(delayedForceToApply, ForceMode.Impulse);
+    }
+
+    private void DashEnd()
+    {
+        dashing = false;
+        dashEnd = true;
+    }
+
+    private void ResetDash()
+    {
+        dashing = false;
+        dashEnd = false;
+        rb.useGravity = true;
+    }
+
+    private Vector3 GetDirection(Transform forwardT)
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        Vector3 direction = new Vector3();
+
+        direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
+
+        if (verticalInput == 0 && horizontalInput == 0)
+            direction = forwardT.forward;
+
+        return direction.normalized;
     }
 }

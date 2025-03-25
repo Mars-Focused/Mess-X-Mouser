@@ -5,33 +5,33 @@ using TMPro;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
-    public float walkSpeed;
-    public float walkSpeedChange;
-    public float groundDrag;
+    public float walkSpeed; //15
+    public float walkSpeedChange; //5
+    public float groundDrag; //4
     private float moveSpeed;
 
     [Header("Jumping")]
-    public float jumpForce;
-    public float jumpCooldown;
-    public float airMultiplier;
+    public float jumpForce; //10, we may want to change this to jump height and do some Maths
+    public float jumpCooldown; //0.2
+    public float airMultiplier; //0.3
     bool readyToJump;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchYScale;
-    public float crouchDownForce;
+    public float crouchSpeed; //5
+    public float crouchYScale; //0.5
+    public float crouchDownForce; //10, it's a high number to be able to change direction Mid-air
     private float startYScale;
 
     [Header("Dashing")]
-    public float dashEndSpeedChange;
-    public float dashSpeed;
-    public float dashSpeedChange;
-    public float dashForce;
-    public float dashDuration;
-    public float dashEndDuration;
-    public bool resetVel = true;
-    public float dashCd;
+    public float dashEndSpeedChange; //10
+    public float dashSpeed; //30
+    public float dashSpeedChange; //10
+    public float dashForce; //30
+    public float dashDuration; //0.18
+    public float dashEndDuration; //0.02
+    public bool resetVel = true; 
+    public float dashCd; //0.21
     public KeyCode dashKey = KeyCode.LeftShift;
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
@@ -42,12 +42,12 @@ public class PlayerMovementDashing : MonoBehaviour
     public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
-    public float playerHeight;
+    public float playerHeight; //2
     public LayerMask whatIsGround;
     bool grounded;
 
     [Header("Slope Handling")]
-    public float maxSlopeAngle;
+    public float maxSlopeAngle; //45
     public Transform orientation; // <-ORIENTATION
     private RaycastHit slopeHit;
     private bool exitingSlope;

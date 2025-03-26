@@ -20,6 +20,7 @@ public class PlayerMovementDashing : MonoBehaviour
     [Header("Crouching")]
     public float crouchSpeed; //5
     public float crouchYScale; //0.5
+    public float crouchMultiplier; //0.05
     public float crouchDownForce; //10, it's a high number to be able to change direction Mid-air
     private float startYScale;
 
@@ -176,7 +177,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 break;
             case MovementState.crouching:
                 desiredMoveSpeed = crouchSpeed;
-                drag = true;
+                drag = false;
                 useGravity = true;
                 if (!Input.GetKey(crouchKey))
                 {
@@ -209,6 +210,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 }
                 break;
         }
+
         /*
         if (lastState == MovementState.dashing && lastState != MovementState.dashend)
         {
@@ -220,7 +222,7 @@ public class PlayerMovementDashing : MonoBehaviour
         }
         */
 
-        if (lastDesiredMoveSpeed > desiredMoveSpeed && lastState != MovementState.dashend)
+        if (lastDesiredMoveSpeed > desiredMoveSpeed && state != MovementState.dashend)
         {
             keepMomentum = true;
         }
@@ -354,6 +356,10 @@ public class PlayerMovementDashing : MonoBehaviour
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
         }
+
+        // while crouching
+        else if (state == MovementState.crouching)
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * crouchMultiplier, ForceMode.Force);
 
         // on ground
         else if (grounded)

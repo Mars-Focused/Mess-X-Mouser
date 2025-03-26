@@ -125,7 +125,6 @@ public class PlayerMovementDashing : MonoBehaviour
             Dash();
             state = MovementState.dashing;
         }
- 
 
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
@@ -138,10 +137,14 @@ public class PlayerMovementDashing : MonoBehaviour
         // start crouch
         if (Input.GetKeyDown(crouchKey))
         {
+            ResetYVel();
+            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
+        }
+
+        if (Input.GetKey(crouchKey) && grounded)
+        {
             state = MovementState.crouching;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-            //ResetYVel();
-            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
         // stop crouch
@@ -206,8 +209,8 @@ public class PlayerMovementDashing : MonoBehaviour
                 }
                 break;
         }
-
-        if (lastState == MovementState.dashing && state != MovementState.dashend)
+        /*
+        if (lastState == MovementState.dashing && lastState != MovementState.dashend)
         {
             keepMomentum = true;
         }
@@ -215,8 +218,18 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             keepMomentum = false;
         }
-        
-        lastState = state;
+        */
+
+        if (lastDesiredMoveSpeed > desiredMoveSpeed && lastState != MovementState.dashend)
+        {
+            keepMomentum = true;
+        }
+        else
+        {
+            keepMomentum = false;
+        }
+
+            lastState = state;
         
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
         lastDesiredMoveSpeed = desiredMoveSpeed;

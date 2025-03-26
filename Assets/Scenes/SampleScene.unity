@@ -768,6 +768,7 @@ MonoBehaviour:
   crouchSpeed: 5
   crouchYScale: 0.5
   crouchDownForce: 10
+  crouchMultiplier: 0.1
   dashEndSpeedChange: 10
   dashSpeed: 30
   dashSpeedChange: 10

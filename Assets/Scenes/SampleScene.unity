@@ -672,7 +672,6 @@ GameObject:
   - component: {fileID: 1551504181}
   - component: {fileID: 1551504180}
   - component: {fileID: 1551504184}
-  - component: {fileID: 1551504183}
   m_Layer: 0
   m_Name: Protagonist
   m_TagString: Untagged
@@ -725,27 +724,6 @@ Transform:
   - {fileID: 1040468156}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1551504183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551504179}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 958d222c74407334d8ca0c14901eec4f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  orientation: {fileID: 2077229903}
-  dashForce: 25
-  maxDashYSpeed: 30
-  dashDuration: 0.2
-  dashEndDuration: 0.05
-  allowAllDirections: 1
-  resetVel: 1
-  dashCd: 0.5
-  dashKey: 304
 --- !u!114 &1551504184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,8 +745,8 @@ MonoBehaviour:
   jumping: 0
   crouchSpeed: 5
   crouchYScale: 0.5
+  crouchMultiplier: 0.05
   crouchDownForce: 10
-  crouchMultiplier: 0.1
   dashEndSpeedChange: 10
   dashSpeed: 30
   dashSpeedChange: 10

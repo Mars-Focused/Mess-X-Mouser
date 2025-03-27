@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
     public float walkSpeed; //15
     public float walkSpeedChange; //5
     public float groundDrag; //4
+    public InputAction inputDirection;
     private float moveSpeed;
 
     [Header("Jumping")]

@@ -9,7 +9,6 @@ public class PlayerMovementDashing : MonoBehaviour
     public float walkSpeed; //15
     public float walkSpeedChange; //5
     public float groundDrag; //4
-    public InputAction inputDirection;
     private float moveSpeed;
 
     [Header("Jumping")]
@@ -35,7 +34,7 @@ public class PlayerMovementDashing : MonoBehaviour
     public float dashEndDuration; //0.02
     public bool resetVel = true; 
     public float dashCd; //0.21
-    public KeyCode dashKey = KeyCode.LeftShift;
+    //public KeyCode dashKey = KeyCode.LeftShift;
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
@@ -66,6 +65,9 @@ public class PlayerMovementDashing : MonoBehaviour
     private bool useGravity;
 
     Vector3 moveDirection;
+    public ProtagControls protagControls;
+    private InputAction move; // <-Nessesary for NewInput Controller
+    private InputAction dash; // <-Nessesary for NewInput Controller
 
     Rigidbody rb; // <-RIGIDBODY
 
@@ -79,6 +81,27 @@ public class PlayerMovementDashing : MonoBehaviour
         air
     }
 
+    private void Awake() 
+    {
+        protagControls = new ProtagControls(); // <-Nessesary for NewInput Controller
+    }
+
+    private void OnEnable()
+    {
+        move = protagControls.Player.Move; // <-Nessesary for NewInput Controller
+        move.Enable(); // <-Nessesary for NewInput Controller
+
+        dash = protagControls.Player.Dash;
+        dash.Enable();
+        dash.performed += Dash;
+    }
+
+    private void OnDisable()
+    {
+        move.Disable(); // <-Nessesary for NewInput Controller
+        dash.Disable();
+    }
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -90,7 +113,6 @@ public class PlayerMovementDashing : MonoBehaviour
         readyToJump = true;
 
         startYScale = transform.localScale.y;
-
     }
 
     private void Update()
@@ -115,19 +137,13 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        MovePlayer(); 
     }
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-        verticalInput = Input.GetAxisRaw("Vertical");
-
-        if (Input.GetKeyDown(dashKey))
-        {
-            Dash();
-            state = MovementState.dashing;
-        }
+        horizontalInput = move.ReadValue<Vector2>().x;
+        verticalInput = move.ReadValue<Vector2>().y;
 
         // when to jump
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
@@ -345,7 +361,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MovePlayer()
     {
-        //if (state == MovementState.dashing) return;
+        // if (state == MovementState.dashing) return;
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -451,10 +467,11 @@ public class PlayerMovementDashing : MonoBehaviour
             CancelInvoke(nameof(DashEnd));
     }
 
-    private void Dash()
+    private void Dash(InputAction.CallbackContext context)
     {
         if (dashCdTimer > 0) return;
         else dashCdTimer = dashCd;
+        state = MovementState.dashing;
 
         dashing = true;
 

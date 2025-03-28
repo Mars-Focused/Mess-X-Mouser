@@ -491,7 +491,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
         Vector3 direction = GetDirection(forwardT);
 
-
         Vector3 forceToApply = direction * dashForce;
 
         rb.useGravity = false;

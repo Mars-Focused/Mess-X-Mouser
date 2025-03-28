@@ -68,6 +68,7 @@ public class PlayerMovementDashing : MonoBehaviour
     public ProtagControls protagControls;
     private InputAction move; // <-Nessesary for NewInput Controller
     private InputAction dash; // <-Nessesary for NewInput Controller
+    private InputAction jump; // <- Yadda Yadda Input things
 
     Rigidbody rb; // <-RIGIDBODY
 
@@ -94,12 +95,17 @@ public class PlayerMovementDashing : MonoBehaviour
         dash = protagControls.Player.Dash;
         dash.Enable();
         dash.performed += Dash;
+
+        jump = protagControls.Player.Jump;
+        jump.Enable();
+        jump.performed += Jump;
     }
 
     private void OnDisable()
     {
         move.Disable(); // <-Nessesary for NewInput Controller
         dash.Disable();
+        jump.Disable();
     }
 
     private void Start()
@@ -145,29 +151,30 @@ public class PlayerMovementDashing : MonoBehaviour
         horizontalInput = move.ReadValue<Vector2>().x;
         verticalInput = move.ReadValue<Vector2>().y;
 
-        // when to jump
+        /*
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
-            readyToJump = false;
             Jump();
+            readyToJump = false;
             state = MovementState.air;
         }
+        */
 
         // start crouch
-        if (Input.GetKeyDown(crouchKey))
+        if (Input.GetKeyDown(crouchKey)) // <- needs to be switched with new input system.
         {
             ResetYVel();
             rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
-        if (Input.GetKey(crouchKey) && grounded)
+        if (Input.GetKey(crouchKey) && grounded) // <- needs to be switched with new input system.
         {
             state = MovementState.crouching;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
         }
 
         // stop crouch
-        if (Input.GetKeyUp(crouchKey))
+        if (Input.GetKeyUp(crouchKey)) // <- needs to be switched with new input system.
         {
             state = MovementState.walking;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
@@ -176,7 +183,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void StateHandler()
     {
-        if (Input.GetKey(crouchKey) && grounded)
+        if (Input.GetKey(crouchKey) && grounded) // <- needs to be switched with new input system.
         {
             state = MovementState.crouching;
         }
@@ -197,7 +204,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 desiredMoveSpeed = crouchSpeed;
                 drag = false;
                 useGravity = true;
-                if (!Input.GetKey(crouchKey))
+                if (!Input.GetKey(crouchKey)) // <- needs to be switched with new input system.
                 {
                     state = MovementState.walking;
                 }
@@ -207,7 +214,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 speedChangeFactor = dashSpeedChange;
                 drag = false;
                 useGravity = false;
-                if(Input.GetKey(jumpKey))
+                if(Input.GetKey(jumpKey)) // <- needs to be switched with new input system.
                 {
                     state = MovementState.air;
                 }
@@ -361,7 +368,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MovePlayer()
     {
-        // if (state == MovementState.dashing) return;
+        // if (state == MovementState.dashing) return; 
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -420,8 +427,11 @@ public class PlayerMovementDashing : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
     }
 
-    private void Jump()
+    private void Jump(InputAction.CallbackContext context)
     {
+        if (!grounded || !readyToJump) return;
+        state = MovementState.air;
+        readyToJump = false;
         exitingSlope = true;
         jumping = true;
         Invoke(nameof(ResetJump), jumpCooldown);

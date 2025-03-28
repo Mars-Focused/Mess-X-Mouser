@@ -368,7 +368,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MovePlayer()
     {
-        // if (state == MovementState.dashing) return; 
+        if (state == MovementState.dashing || state == MovementState.dashend) return; 
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;

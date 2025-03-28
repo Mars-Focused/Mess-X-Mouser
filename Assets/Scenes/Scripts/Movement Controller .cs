@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using System;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
@@ -127,6 +128,7 @@ public class PlayerMovementDashing : MonoBehaviour
         DashUpdates();
         SpeedControl();
         StateHandler();
+        MomentumHandler();
         DragHandler();
     }
 
@@ -234,45 +236,6 @@ public class PlayerMovementDashing : MonoBehaviour
         }
 
         /*
-        if (lastState == MovementState.dashing && lastState != MovementState.dashend)
-        {
-            keepMomentum = true;
-        }
-        else
-        {
-            keepMomentum = false;
-        }
-        */
-
-        if (lastDesiredMoveSpeed > desiredMoveSpeed && state != MovementState.dashend)
-        {
-            keepMomentum = true;
-        }
-        else
-        {
-            keepMomentum = false;
-        }
-
-            lastState = state;
-        
-        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
-        lastDesiredMoveSpeed = desiredMoveSpeed;
-        if (desiredMoveSpeedHasChanged)
-        {
-            if (keepMomentum)
-            {
-                StopAllCoroutines();
-                StartCoroutine(SmoothlyLerpMoveSpeed());
-            }
-            else
-            {
-                StopAllCoroutines();
-                moveSpeed = desiredMoveSpeed;
-            }
-        }
-        lastDesiredMoveSpeed = desiredMoveSpeed;
-
-        /*
         // Mode - Dashing
         if (dashing)
         {
@@ -338,6 +301,49 @@ public class PlayerMovementDashing : MonoBehaviour
         lastDesiredMoveSpeed = desiredMoveSpeed;
         lastState = state;
         */
+    }
+
+    private void MomentumHandler()
+    {
+        /*
+        if (lastState == MovementState.dashing && lastState != MovementState.dashend)
+        {
+            keepMomentum = true;
+        }
+        else
+        {
+            keepMomentum = false;
+        }
+        */
+
+        if (lastDesiredMoveSpeed > desiredMoveSpeed && state != MovementState.dashend)
+        {
+            keepMomentum = true;
+        }
+        else
+        {
+            keepMomentum = false;
+        }
+
+        lastState = state;
+
+        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
+        lastDesiredMoveSpeed = desiredMoveSpeed;
+        if (desiredMoveSpeedHasChanged)
+        {
+            if (keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                StopAllCoroutines();
+                moveSpeed = desiredMoveSpeed;
+            }
+        }
+
+        lastDesiredMoveSpeed = desiredMoveSpeed;
     }
 
     private IEnumerator SmoothlyLerpMoveSpeed()
@@ -513,6 +519,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void DashEnd()
     {
+        Debug.Log("Dashend");
         state = MovementState.dashend;
         dashing = false;
         dashEnd = true;

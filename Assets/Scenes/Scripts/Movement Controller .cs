@@ -82,12 +82,12 @@ public class PlayerMovementDashing : MonoBehaviour
         air
     }
 
-    private void Awake() 
+    private void Awake() // 
     {
         protagControls = new ProtagControls(); // <-Nessesary for NewInput Controller
     }
 
-    private void OnEnable()
+    private void OnEnable() // all controls that need to be enabled for new movement system.
     {
         move = protagControls.Player.Move; // <-Nessesary for NewInput Controller
         move.Enable(); // <-Nessesary for NewInput Controller
@@ -101,7 +101,7 @@ public class PlayerMovementDashing : MonoBehaviour
         jump.performed += Jump;
     }
 
-    private void OnDisable()
+    private void OnDisable() // all controls that need to be disabled for new movement system.
     {
         move.Disable(); // <-Nessesary for NewInput Controller
         dash.Disable();
@@ -112,12 +112,9 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
-
         dashEnd = false;
         dashing = false;
-
         readyToJump = true;
-
         startYScale = transform.localScale.y;
     }
 
@@ -368,7 +365,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (state == MovementState.dashing || state == MovementState.dashend) return; 
+        if (state == MovementState.dashing || state == MovementState.dashend) return;
 
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -382,6 +379,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 rb.AddForce(Vector3.down * 80f, ForceMode.Force);
         }
 
+        // DOTO: CONSOLIDATE THIS CODE
         // while crouching
         else if (state == MovementState.crouching)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * crouchMultiplier, ForceMode.Force);

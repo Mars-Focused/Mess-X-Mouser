@@ -157,37 +157,6 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         horizontalInput = move.ReadValue<Vector2>().x;
         verticalInput = move.ReadValue<Vector2>().y;
-
-        /*
-        if (Input.GetKey(jumpKey) && readyToJump && grounded)
-        {
-            Jump();
-            readyToJump = false;
-            state = MovementState.air;
-        }
-        */
-
-        // start crouch
-        /*
-        if (Input.GetKeyDown(crouchKey)) // <- needs to be switched with new input system.
-        {
-            ResetYVel();
-            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
-        }
-
-        if (Input.GetKey(crouchKey) && grounded) // <- needs to be switched with new input system.
-        {
-            state = MovementState.crouching;
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
-        }
-
-        // stop crouch
-        if (Input.GetKeyUp(crouchKey)) // <- needs to be switched with new input system.
-        {
-            state = MovementState.walking;
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
-        */
     }
 
     private void Crouch(InputAction.CallbackContext context)
@@ -268,73 +237,6 @@ public class PlayerMovementDashing : MonoBehaviour
                 }
                 break;
         }
-
-        /*
-        // Mode - Dashing
-        if (dashing)
-        {
-            state = MovementState.dashing;
-            desiredMoveSpeed = dashSpeed;
-            speedChangeFactor = dashSpeedChange;
-            drag = false;
-        }
-
-        else if (dashEnd)
-        {
-            state = MovementState.dashend;
-            desiredMoveSpeed = walkSpeed;
-            speedChangeFactor = dashEndSpeedChange;
-            drag = true;
-        }
-
-        // Mode - Crouching
-        else if (Input.GetKey(crouchKey) && grounded)
-        {
-            state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
-            drag = true;
-        }
-
-        // Mode - Walking
-        else if (grounded)
-        {
-            state = MovementState.walking;
-            desiredMoveSpeed = walkSpeed;
-            speedChangeFactor = walkSpeedChange;
-            drag = true;
-        }
-
-        // Mode - Air
-        else
-        {
-            state = MovementState.air;
-            desiredMoveSpeed = walkSpeed;
-            drag = false;
-        }
-
-        if (lastState == MovementState.dashing) keepMomentum = true;
-        if (state == MovementState.dashend) keepMomentum = false;
-        //if (state == MovementState.walking) keepMomentum = false;
-        // if (state == MovementState.air) keepMomentum = true;
-
-        bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
-
-        if (desiredMoveSpeedHasChanged)
-        {
-            if (keepMomentum)
-            {
-                StopAllCoroutines();
-                StartCoroutine(SmoothlyLerpMoveSpeed());
-            }
-            else
-            {
-                StopAllCoroutines();
-                moveSpeed = desiredMoveSpeed;
-            }
-        }
-        lastDesiredMoveSpeed = desiredMoveSpeed;
-        lastState = state;
-        */
     }
 
     private void MomentumHandler()

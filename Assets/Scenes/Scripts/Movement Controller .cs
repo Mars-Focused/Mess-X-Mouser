@@ -185,11 +185,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void StateHandler()
     {
-        if (Input.GetKey(crouchKey) && grounded) // <- needs to be switched with new input system.
-        {
-            state = MovementState.crouching;
-        }
-        //try with switch bases on enum 
         switch (state)
         {
             case MovementState.walking:
@@ -206,20 +201,12 @@ public class PlayerMovementDashing : MonoBehaviour
                 desiredMoveSpeed = crouchSpeed;
                 drag = false;
                 useGravity = true;
-                if (!Input.GetKey(crouchKey)) // <- needs to be switched with new input system.
-                {
-                    state = MovementState.walking;
-                }
                 break;
             case MovementState.dashing:
                 desiredMoveSpeed = dashSpeed;
                 speedChangeFactor = dashSpeedChange;
                 drag = false;
                 useGravity = false;
-                if(Input.GetKey(jumpKey)) // <- needs to be switched with new input system.
-                {
-                    state = MovementState.air;
-                }
                 break;
             case MovementState.dashend:
                 desiredMoveSpeed = walkSpeed;

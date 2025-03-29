@@ -740,15 +740,6 @@ MonoBehaviour:
   walkSpeed: 15
   walkSpeedChange: 5
   groundDrag: 4
-  inputDirection:
-    m_Name: Input Direction
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: a7564d31-97ee-4d77-86fe-00d85ccc4017
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
   jumpForce: 10
   jumpCooldown: 0.2
   airMultiplier: 0.3
@@ -757,7 +748,7 @@ MonoBehaviour:
   crouchYScale: 0.5
   crouchMultiplier: 0.05
   crouchDownForce: 10
-  dashEndSpeedChange: 10
+  dashEndSpeedChange: 200
   dashSpeed: 30
   dashSpeedChange: 10
   dashForce: 30
@@ -765,7 +756,6 @@ MonoBehaviour:
   dashEndDuration: 0.02
   resetVel: 1
   dashCd: 0.21
-  dashKey: 304
   dashEnd: 0
   dashing: 0
   jumpKey: 32

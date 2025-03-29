@@ -182,7 +182,6 @@ public class PlayerMovementDashing : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
-     // :P
     private void StateHandler()
     {
         switch (state)
@@ -228,17 +227,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MomentumHandler()
     {
-        /*
-        if (lastState == MovementState.dashing && lastState != MovementState.dashend)
-        {
-            keepMomentum = true;
-        }
-        else
-        {
-            keepMomentum = false;
-        }
-        */
-
         if (lastDesiredMoveSpeed > desiredMoveSpeed && state != MovementState.dashend)
         {
             keepMomentum = true;

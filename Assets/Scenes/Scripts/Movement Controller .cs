@@ -182,7 +182,7 @@ public class PlayerMovementDashing : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
-
+     // :P
     private void StateHandler()
     {
         switch (state)

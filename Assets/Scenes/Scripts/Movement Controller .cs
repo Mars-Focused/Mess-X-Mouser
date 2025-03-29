@@ -70,6 +70,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private InputAction move; // <-Nessesary for NewInput Controller
     private InputAction dash; // <-Nessesary for NewInput Controller
     private InputAction jump; // <- Yadda Yadda Input things
+    private InputAction crouch;
 
     Rigidbody rb; // <-RIGIDBODY
 
@@ -100,6 +101,12 @@ public class PlayerMovementDashing : MonoBehaviour
         jump = protagControls.Player.Jump;
         jump.Enable();
         jump.performed += Jump;
+
+        crouch = protagControls.Player.Crouch;
+        crouch.Enable();
+        crouch.performed += Crouch;
+        crouch.started += Crouch;
+        crouch.canceled += Crouch;
     }
 
     private void OnDisable() // all controls that need to be disabled for new movement system.
@@ -107,6 +114,7 @@ public class PlayerMovementDashing : MonoBehaviour
         move.Disable(); // <-Nessesary for NewInput Controller
         dash.Disable();
         jump.Disable();
+        crouch.Disable();
     }
 
     private void Start()
@@ -160,6 +168,7 @@ public class PlayerMovementDashing : MonoBehaviour
         */
 
         // start crouch
+        /*
         if (Input.GetKeyDown(crouchKey)) // <- needs to be switched with new input system.
         {
             ResetYVel();
@@ -175,6 +184,31 @@ public class PlayerMovementDashing : MonoBehaviour
         // stop crouch
         if (Input.GetKeyUp(crouchKey)) // <- needs to be switched with new input system.
         {
+            state = MovementState.walking;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+        }
+        */
+    }
+
+    private void Crouch(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("Started");
+            ResetYVel();
+            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
+        }
+
+        if (context.phase.IsInProgress() && grounded)
+        {
+            Debug.Log("Performed");
+            state = MovementState.crouching;
+            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+        }
+
+        if (context.canceled)
+        {
+            Debug.Log("Canceled");
             state = MovementState.walking;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
@@ -519,7 +553,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void DashEnd()
     {
-        Debug.Log("Dashend");
+        //Debug.Log("Dashend");
         state = MovementState.dashend;
         dashing = false;
         dashEnd = true;

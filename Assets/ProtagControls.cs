@@ -29,7 +29,7 @@ public partial class @ProtagControls: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""Move"",
-                    ""type"": ""Value"",
+                    ""type"": ""PassThrough"",
                     ""id"": ""97839d94-c474-4918-a0d5-40b64ea1845c"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",

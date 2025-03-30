@@ -27,22 +27,17 @@ public class PlayerMovementDashing : MonoBehaviour
     private float startYScale;
 
     [Header("Dashing")]
-    public float dashEndSpeedChange; //10
+    public float dashEndSpeedChange; //200
     public float dashSpeed; //30
     public float dashSpeedChange; //10
     public float dashForce; //30
     public float dashDuration; //0.18
     public float dashEndDuration; //0.02
-    public bool resetVel = true; 
+    private bool resetVel = true; 
     public float dashCd; //0.21
-    //public KeyCode dashKey = KeyCode.LeftShift;
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
-
-    [Header("Keybinds")]
-    public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     public float playerHeight; //2
@@ -84,7 +79,7 @@ public class PlayerMovementDashing : MonoBehaviour
         air
     }
 
-    private void Awake() // 
+    private void Awake()
     {
         protagControls = new ProtagControls(); // <-Nessesary for NewInput Controller
     }

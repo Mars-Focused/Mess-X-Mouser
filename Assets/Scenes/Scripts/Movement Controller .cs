@@ -38,6 +38,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
+    public float Stamina = 3f; // TODO: ADD STAMINA CONSUMPTION AND REGENERATION.
 
     [Header("Ground Check")]
     public float playerHeight; //2

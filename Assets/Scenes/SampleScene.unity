@@ -760,7 +760,7 @@ MonoBehaviour:
   dashing: 0
   maxStamina: 3
   stamina: 3
-  staminaRegen: 1
+  staminaRegen: 0.6
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2

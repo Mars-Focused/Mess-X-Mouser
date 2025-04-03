@@ -164,6 +164,23 @@ public class PlayerMovementDashing : MonoBehaviour
             rb.drag = 0;
     }
 
+    private void ConsumeStamina(float ammount)
+    {
+        stamina -= ammount;
+    }
+
+    private bool HaveEnoughStamina(float ammount)
+    {
+        if (stamina >= ammount)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void FixedUpdate()
     {
         MovePlayer(); 

@@ -38,7 +38,8 @@ public class PlayerMovementDashing : MonoBehaviour
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
-    public float Stamina = 3f; // TODO: ADD STAMINA CONSUMPTION AND REGENERATION.
+    public float stamina = 3f; // TODO: ADD STAMINA CONSUMPTION AND REGENERATION.
+    public float staminaRegen = 1f;
 
     [Header("Ground Check")]
     public float playerHeight; //2
@@ -132,10 +133,26 @@ public class PlayerMovementDashing : MonoBehaviour
         DashUpdates();
         SpeedControl();
         StateHandler();
+        StaminaRegenerator();
         MomentumHandler();
         DragHandler();
     }
+    private void  StaminaRegenerator()
+    {
+        if (stamina < 3f)
+        {
+            stamina += staminaRegen;
+        }
+        else if (stamina > 3f)
+        {
+            stamina = 3f; 
+        }
+    }
 
+    private void InstantlyRefillStamina()
+    {
+        stamina = 3;
+    }
     private void DragHandler()
     {
         if (drag == true)

@@ -33,6 +33,7 @@ public class PlayerMovementDashing : MonoBehaviour
     public float dashForce; //30
     public float dashDuration; //0.18
     public float dashEndDuration; //0.02
+    public float dashStamina; //1
     private bool resetVel = true; 
     public float dashCd; //0.21
     private float dashCdTimer;
@@ -40,7 +41,7 @@ public class PlayerMovementDashing : MonoBehaviour
     [HideInInspector] public bool dashing;
 
     [Header("Stamina")]
-    public float maxStamina = 3f; // TODO: ADD STAMINA CONSUMPTION.
+    public float maxStamina = 3f;
     public float stamina = 3f; 
     public float staminaRegen = 1f;
 
@@ -144,9 +145,10 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         if (stamina < maxStamina)
         {
-            stamina += staminaRegen;
+            stamina += staminaRegen * Time.deltaTime;
         }
-        else if (stamina > maxStamina)
+
+        if (stamina > maxStamina)
         {
             MaxOutStamina();
         }
@@ -164,12 +166,12 @@ public class PlayerMovementDashing : MonoBehaviour
             rb.drag = 0;
     }
 
-    private void ConsumeStamina(float ammount)
+    private void StaminaConsume(float ammount)
     {
         stamina -= ammount;
     }
 
-    private bool HaveEnoughStamina(float ammount)
+    private bool StaminaCheck(float ammount)
     {
         if (stamina >= ammount)
         {
@@ -427,8 +429,10 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void Dash(InputAction.CallbackContext context)
     {
-        if (dashCdTimer > 0) return;
-        else dashCdTimer = dashCd;
+        if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
+        else 
+        StaminaConsume(dashStamina);
+        dashCdTimer = dashCd;
         state = MovementState.dashing;
 
         dashing = true;

@@ -754,12 +754,13 @@ MonoBehaviour:
   dashForce: 30
   dashDuration: 0.18
   dashEndDuration: 0.02
-  resetVel: 1
+  dashStamina: 1
   dashCd: 0.21
   dashEnd: 0
   dashing: 0
-  jumpKey: 32
-  crouchKey: 306
+  maxStamina: 3
+  stamina: 3
+  staminaRegen: 1
   playerHeight: 2
   whatIsGround:
     serializedVersion: 2

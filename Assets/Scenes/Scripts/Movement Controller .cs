@@ -38,7 +38,10 @@ public class PlayerMovementDashing : MonoBehaviour
     private float dashCdTimer;
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
-    public float stamina = 3f; // TODO: ADD STAMINA CONSUMPTION AND REGENERATION.
+
+    [Header("Stamina")]
+    public float maxStamina = 3f; // TODO: ADD STAMINA CONSUMPTION.
+    public float stamina = 3f; 
     public float staminaRegen = 1f;
 
     [Header("Ground Check")]
@@ -139,19 +142,19 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     private void  StaminaRegenerator()
     {
-        if (stamina < 3f)
+        if (stamina < maxStamina)
         {
             stamina += staminaRegen;
         }
-        else if (stamina > 3f)
+        else if (stamina > maxStamina)
         {
-            stamina = 3f; 
+            MaxOutStamina();
         }
     }
 
-    private void InstantlyRefillStamina()
+    private void MaxOutStamina()
     {
-        stamina = 3;
+        stamina = maxStamina;
     }
     private void DragHandler()
     {

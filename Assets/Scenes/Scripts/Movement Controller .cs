@@ -7,36 +7,37 @@ using System;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
-    public float walkSpeed; //15
-    public float walkSpeedChange; //5
-    public float groundDrag; //4
-    private float moveSpeed;
+    public float walkSpeed = 15f;
+    public float walkSpeedChange = 5f;
+    public float groundDrag = 4f;
+    private float moveSpeed; //This value is changed consistantly
 
     [Header("Jumping")]
-    public float jumpForce; //10, we may want to change this to jump height and do some Maths
-    public float jumpCooldown; //0.2
-    public float airMultiplier; //0.3
+    public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
+    public float jumpCooldown = 0.2f;
+    public float airMultiplier = 0.3f;
     bool readyToJump;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
-    public float crouchSpeed; //5
-    public float crouchYScale; //0.5
-    public float crouchMultiplier; //0.05
-    public float crouchDownForce; //10, it's a high number to be able to change direction Mid-air
+    public float crouchSpeed = 5f;
+    public float crouchYScale = 0.5f;
+    public float crouchMultiplier = 0.1f;
+    public float crouchDownForce = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
+    private bool crouching;
 
     [Header("Dashing")]
-    public float dashEndSpeedChange; //200
-    public float dashSpeed; //30
-    public float dashSpeedChange; //10
-    public float dashForce; //30
-    public float dashDuration; //0.18
-    public float dashEndDuration; //0.02
-    public float dashStamina; //1
-    private bool resetVel = true; 
-    public float dashCd; //0.21
+    public float dashEndSpeedChange = 200f;
+    public float dashSpeed = 30f;
+    public float dashSpeedChange = 10f;
+    public float dashForce = 30f;
+    public float dashDuration = 0.18f;
+    public float dashEndDuration = 0.02f;
+    public float dashStamina = 1;
+    public float dashCd = 0.21f;
     private float dashCdTimer;
+    private Vector3 delayedForceToApply; // Nessesary for Dash to function.
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
 
@@ -46,13 +47,13 @@ public class PlayerMovementDashing : MonoBehaviour
     public float staminaRegen = 1f;
 
     [Header("Ground Check")]
-    public float playerHeight; //2
+    public float playerHeight = 2f;
     public LayerMask whatIsGround;
     bool grounded;
 
     [Header("Slope Handling")]
-    public float maxSlopeAngle; //45
-    public Transform orientation; // <-ORIENTATION
+    public float maxSlopeAngle = 45f;
+    public Transform orientation;
     private RaycastHit slopeHit;
     private bool exitingSlope;
 
@@ -61,16 +62,17 @@ public class PlayerMovementDashing : MonoBehaviour
     float verticalInput;
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
-    private MovementState lastState;
     private bool keepMomentum = false;
     private float speedChangeFactor;
     private bool useGravity;
 
     Vector3 moveDirection;
+
+    // The code below is nessesary for NewInput Controller
     public ProtagControls protagControls;
-    private InputAction move; // <-Nessesary for NewInput Controller
-    private InputAction dash; // <-Nessesary for NewInput Controller
-    private InputAction jump; // <- Yadda Yadda Input things
+    private InputAction move; 
+    private InputAction dash; 
+    private InputAction jump; 
     private InputAction crouch;
 
     Rigidbody rb; // <-RIGIDBODY
@@ -198,21 +200,20 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("Started");
+            crouching = true;
             ResetYVel();
             rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
         }
 
-        if (context.phase.IsInProgress() && grounded)
+        if (context.performed && grounded)
         {
-            Debug.Log("Performed");
             state = MovementState.crouching;
             transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
         }
 
         if (context.canceled)
         {
-            Debug.Log("Canceled");
+            crouching = false;
             state = MovementState.walking;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
@@ -229,6 +230,10 @@ public class PlayerMovementDashing : MonoBehaviour
                 if (!grounded)
                 {
                     state = MovementState.air;
+                }
+                if (crouching)
+                {
+                    state = MovementState.crouching;
                 }
                 break;
             case MovementState.crouching:
@@ -270,8 +275,6 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             keepMomentum = false;
         }
-
-        lastState = state;
 
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
         lastDesiredMoveSpeed = desiredMoveSpeed;
@@ -423,7 +426,7 @@ public class PlayerMovementDashing : MonoBehaviour
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
 
-        if (jumping == true)
+        if (jumping == true || state == MovementState.crouching)
             CancelInvoke(nameof(DashEnd));
     }
 
@@ -456,11 +459,9 @@ public class PlayerMovementDashing : MonoBehaviour
         Invoke(nameof(ResetDash), dashDuration + dashEndDuration);
     }
 
-    private Vector3 delayedForceToApply;
     private void DelayedDashForce()
     {
-        if (resetVel)
-            rb.velocity = Vector3.zero;
+        rb.velocity = Vector3.zero;
 
         rb.AddForce(delayedForceToApply, ForceMode.Impulse);
     }
@@ -483,6 +484,10 @@ public class PlayerMovementDashing : MonoBehaviour
         {
             state = MovementState.air;
         }
+        else if (state == MovementState.crouching)
+        {
+            return;
+        }
         else
         {
             state = MovementState.walking;
@@ -491,9 +496,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private Vector3 GetDirection(Transform forwardT)
     {
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-
         Vector3 direction = new Vector3();
 
         direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;

@@ -1,9 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.InputSystem;
-using System;
+//using System.Collections.Generic;
+//using TMPro;
+//using System;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
@@ -42,9 +42,9 @@ public class PlayerMovementDashing : MonoBehaviour
     [HideInInspector] public bool dashing;
 
     [Header("Stamina")]
-    public float maxStamina = 3f;
-    public float stamina = 3f; 
-    public float staminaRegen = 1f;
+    public float maxStamina = 2f;
+    private float stamina;
+    public float staminaRegen = 0.5f;
 
     [Header("Ground Check")]
     public float playerHeight = 2f;
@@ -123,6 +123,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        stamina = maxStamina;
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
@@ -145,7 +146,7 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     private void  StaminaRegenerator()
     {
-        if (stamina < maxStamina)
+        if (stamina < maxStamina && grounded)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
@@ -160,6 +161,7 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         stamina = maxStamina;
     }
+
     private void DragHandler()
     {
         if (drag == true)
@@ -208,7 +210,7 @@ public class PlayerMovementDashing : MonoBehaviour
         if (context.performed && grounded)
         {
             state = MovementState.crouching;
-            transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+
         }
 
         if (context.canceled)
@@ -218,6 +220,7 @@ public class PlayerMovementDashing : MonoBehaviour
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
     }
+
     private void StateHandler()
     {
         switch (state)
@@ -227,19 +230,14 @@ public class PlayerMovementDashing : MonoBehaviour
                 speedChangeFactor = walkSpeedChange;
                 useGravity = false;
                 drag = true;
-                if (!grounded)
-                {
-                    state = MovementState.air;
-                }
-                if (crouching)
-                {
-                    state = MovementState.crouching;
-                }
+                if (!grounded) state = MovementState.air;
+                if (crouching) state = MovementState.crouching;
                 break;
             case MovementState.crouching:
                 desiredMoveSpeed = crouchSpeed;
                 drag = false;
                 useGravity = true;
+                transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
                 break;
             case MovementState.dashing:
                 desiredMoveSpeed = dashSpeed;
@@ -259,7 +257,8 @@ public class PlayerMovementDashing : MonoBehaviour
                 useGravity = true;
                 if (grounded)
                 {
-                    state = MovementState.walking;
+                    if (crouching) state = MovementState.crouching;
+                    else state = MovementState.walking;
                 }
                 break;
         }
@@ -336,7 +335,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
         // DOTO: CONSOLIDATE THIS CODE
         // while crouching
-        else if (state == MovementState.crouching)
+        else if (crouching)
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * crouchMultiplier, ForceMode.Force);
 
         // on ground

@@ -61,13 +61,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ProtagControls.cs" />
+    <Compile Include="Assets\Scripts\PrefabCircleSpawner.cs" />
+    <Compile Include="Assets\Scripts\Camera Controller.cs" />
+    <Compile Include="Assets\Scripts\Dashing.cs" />
     <Compile Include="Assets\Supers\Enemy.cs" />
-    <Compile Include="Assets\Scenes\Scripts\Dashing.cs" />
-    <Compile Include="Assets\Scenes\Scripts\View_Controller.cs" />
-    <Compile Include="Assets\Scenes\Scripts\Camera Controller.cs" />
+    <Compile Include="Assets\Scripts\Movement Controller .cs" />
+    <Compile Include="Assets\Scripts\View_Controller.cs" />
     <Compile Include="Assets\Supers\Projectile.cs" />
-    <Compile Include="Assets\Scenes\Scripts\PrefabCircleSpawner.cs" />
-    <Compile Include="Assets\Scenes\Scripts\Movement Controller .cs" />
     <Compile Include="Assets\Interfaces\IDamagable.cs" />
   </ItemGroup>
   <ItemGroup>

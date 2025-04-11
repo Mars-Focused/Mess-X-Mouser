@@ -10,7 +10,6 @@ public class HUDStaminaBar : MonoBehaviour
     private void Awake()
     {
         barImage = transform.Find("Bar").GetComponent<Image>();
-
         barImage.fillAmount = 0.3f;
     }
 }

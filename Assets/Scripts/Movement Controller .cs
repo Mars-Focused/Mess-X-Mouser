@@ -43,9 +43,10 @@ public class PlayerMovementDashing : MonoBehaviour
     [HideInInspector] public bool dashing;
 
     [Header("Stamina")]
-    public float maxStamina = 2f;
-    private float stamina;
     public float staminaRegen = 0.5f;
+    private float maxStamina = 2f;
+    private float stamina;
+
 
     [Header("Ground Check")]
     public float playerHeight = 2f;
@@ -188,6 +189,9 @@ public class PlayerMovementDashing : MonoBehaviour
             return false;
         }
     }
+
+    public float GetPlayerStamina() { return stamina; }
+    public float GetPlayerMaxStamina() { return maxStamina; }
 
     private void FixedUpdate()
     {

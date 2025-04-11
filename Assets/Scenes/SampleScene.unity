@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7400732}
+  - component: {fileID: 7400733}
   m_Layer: 0
   m_Name: StaminaBar
   m_TagString: Untagged
@@ -160,6 +161,18 @@ RectTransform:
   m_AnchoredPosition: {x: -640, y: -490}
   m_SizeDelta: {x: 600, y: 54}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7400733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7400731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003ba51107557b248ab2e681446cac43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &34789800
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,7 +697,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0.55
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1015,7 +1028,6 @@ MonoBehaviour:
   dashCd: 0.21
   dashEnd: 0
   dashing: 0
-  maxStamina: 2
   staminaRegen: 2
   playerHeight: 2
   whatIsGround:
@@ -1239,7 +1251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9607843, g: 0.9764706, b: 0.98039216, a: 1}
+  m_Color: {r: 0, g: 0.16862746, b: 0.2, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

@@ -6,10 +6,21 @@ using UnityEngine.UI;
 public class HUDStaminaBar : MonoBehaviour
 {
     private Image barImage;
+    PlayerMovementDashing pm;
 
     private void Awake()
     {
         barImage = transform.Find("Bar").GetComponent<Image>();
         barImage.fillAmount = 0.3f;
+    }
+
+    private void Start()
+    {
+        pm = GetComponent<PlayerMovementDashing>();
+    }
+
+    private void Update()
+    {
+        //barImage.fillAmount = pm.GetPlayerStamina() / pm.GetPlayerMaxStamina();
     }
 }

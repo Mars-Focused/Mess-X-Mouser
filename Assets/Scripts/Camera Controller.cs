@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -8,14 +9,31 @@ public class CameraController : MonoBehaviour
     public float sensY;
 
     public Transform orientation;
+    public ProtagControls protagControls;
+    private InputAction look;
 
     float xRotation;
     float yRotation;
+
+    private void Awake()
+    {
+        protagControls = new ProtagControls(); // <-Nessesary for NewInput Controller
+    }
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    private void OnEnable()
+    {
+        look = protagControls.Player.Look;
+    }
+
+    private void OnDisable()
+    {
+        look.Disable();
     }
 
     private void Update()

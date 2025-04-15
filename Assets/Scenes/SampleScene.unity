@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.16862746, b: 0.2, a: 1}
+  m_Color: {r: 0.23743999, g: 0.48336005, b: 0.53, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.55
+  m_FillAmount: 0.65
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -1007,7 +1007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115acb545808e184d9e6c8632d563cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 15
+  walkSpeed: 12
   walkSpeedChange: 5
   groundDrag: 4
   jumpForce: 10

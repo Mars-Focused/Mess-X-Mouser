@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 //using System.Collections.Generic;
 //using TMPro;
 //using System;
+
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
@@ -44,8 +45,8 @@ public class PlayerMovementDashing : MonoBehaviour
 
     [Header("Stamina")]
     public float staminaRegen = 0.5f;
-    private float maxStamina = 2f;
-    private float stamina;
+    private readonly float MAX_STAMINA = 2f;
+    private float stamina = 2f;
 
 
     [Header("Ground Check")]
@@ -72,9 +73,9 @@ public class PlayerMovementDashing : MonoBehaviour
 
     // The code below is nessesary for NewInput Controller
     public ProtagControls protagControls;
-    private InputAction move; 
-    private InputAction dash; 
-    private InputAction jump; 
+    private InputAction move;
+    private InputAction dash;
+    private InputAction jump;
     private InputAction crouch;
 
     Rigidbody rb; // <-RIGIDBODY
@@ -126,7 +127,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        stamina = maxStamina;
+        stamina = MAX_STAMINA;
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
@@ -147,14 +148,14 @@ public class PlayerMovementDashing : MonoBehaviour
         MomentumHandler();
         DragHandler();
     }
-    private void  StaminaRegenerator()
+    private void StaminaRegenerator()
     {
-        if (stamina < maxStamina && grounded)
+        if (stamina < MAX_STAMINA && grounded)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
 
-        if (stamina > maxStamina)
+        if (stamina > MAX_STAMINA)
         {
             MaxOutStamina();
         }
@@ -162,7 +163,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MaxOutStamina()
     {
-        stamina = maxStamina;
+        stamina = MAX_STAMINA;
     }
 
     private void DragHandler()
@@ -190,12 +191,19 @@ public class PlayerMovementDashing : MonoBehaviour
         }
     }
 
-    public float GetPlayerStamina() { return stamina; }
-    public float GetPlayerMaxStamina() { return maxStamina; }
+    public float GetPlayerStamina()
+    {
+        return stamina;
+    }
+    public float GetPlayerMaxStamina()
+    {
+        return MAX_STAMINA;
+    }
+
 
     private void FixedUpdate()
     {
-        MovePlayer(); 
+        MovePlayer();
     }
 
     private void MyInput()
@@ -438,8 +446,8 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Dash(InputAction.CallbackContext context)
     {
         if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
-        else 
-        StaminaConsume(dashStamina);
+        else
+            StaminaConsume(dashStamina);
         dashCdTimer = dashCd;
         state = MovementState.dashing;
 

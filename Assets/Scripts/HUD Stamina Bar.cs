@@ -8,6 +8,7 @@ public class HUDStaminaBar : MonoBehaviour
     private Image barImage;
     PlayerMovementDashing pm;
 
+
     private void Awake()
     {
         barImage = transform.Find("Bar").GetComponent<Image>();
@@ -16,11 +17,13 @@ public class HUDStaminaBar : MonoBehaviour
 
     private void Start()
     {
-        pm = GetComponent<PlayerMovementDashing>();
+        pm = GameObject.Find("Protagonist").GetComponent<PlayerMovementDashing>();
     }
 
     private void Update()
     {
-        //barImage.fillAmount = pm.GetPlayerStamina() / pm.GetPlayerMaxStamina();
+        float stamina = pm.GetPlayerStamina();
+        float maxStamina = pm.GetPlayerMaxStamina();
+        barImage.fillAmount = stamina / maxStamina;
     }
 }

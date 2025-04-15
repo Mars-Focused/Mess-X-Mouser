@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/*
 public class Dashing : MonoBehaviour
 {
     [Header("References")]
     public Transform orientation; // <- DON'T TRANSFER
     private Rigidbody rb; // <- DON'T TRANSFER
-    private PlayerMovementDashing pm; // <- DON'T TRANSFER
+    //private PlayerMovementDashing pm; // <- DON'T TRANSFER
 
     [Header("Dashing")]
     public float dashForce;
@@ -28,8 +29,8 @@ public class Dashing : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>(); // <- DON'T TRANSFER
-        pm = GetComponent<PlayerMovementDashing>(); // <- DON'T TRANSFER
-        pm.dashing = false;
+        //pm = GetComponent<PlayerMovementDashing>(); // <- DON'T TRANSFER
+        //pm.dashing = false;
     }
 
     private void Update()
@@ -45,8 +46,8 @@ public class Dashing : MonoBehaviour
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
 
-        if (pm.jumping == true)
-            CancelInvoke(nameof(DashEnd));
+        //if (pm.jumping == true)
+        //    CancelInvoke(nameof(DashEnd));
     }
 
     private void Dash()
@@ -54,7 +55,7 @@ public class Dashing : MonoBehaviour
         if (dashCdTimer > 0) return;
         else dashCdTimer = dashCd;
 
-        pm.dashing = true;
+        //pm.dashing = true;
 
         //cam.DoFov(dashFov);
 
@@ -87,14 +88,14 @@ public class Dashing : MonoBehaviour
 
     private void DashEnd()
     {
-        pm.dashing = false;
-        pm.dashEnd = true;
+        //pm.dashing = false;
+        //pm.dashEnd = true;
     }
 
     private void ResetDash()
     {
-        pm.dashing = false;
-        pm.dashEnd = false;
+       // pm.dashing = false;
+       // pm.dashEnd = false;
         rb.useGravity = true;
     }
 
@@ -113,3 +114,4 @@ public class Dashing : MonoBehaviour
         return direction.normalized;
     }
 }
+*/

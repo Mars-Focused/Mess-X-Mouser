@@ -150,7 +150,7 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     private void StaminaRegenerator()
     {
-        if (stamina < MAX_STAMINA && grounded)
+        if (stamina < MAX_STAMINA && grounded && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
@@ -438,6 +438,7 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
+            dashCdTimer = Mathf.Clamp(dashCdTimer, 0f, MAX_STAMINA);
 
         if (jumping == true || state == MovementState.crouching)
             CancelInvoke(nameof(DashEnd));

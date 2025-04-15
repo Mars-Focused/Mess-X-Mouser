@@ -9,8 +9,8 @@ using UnityEngine.UIElements;
 public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
-    public float walkSpeed = 15f;
-    public float walkSpeedChange = 5f;
+    public float walkSpeed = 12f;
+    public float walkSpeedChange = 1f;
     public float groundDrag = 4f;
     private float moveSpeed; //This value is changed consistantly
 
@@ -54,11 +54,12 @@ public class PlayerMovementDashing : MonoBehaviour
     public LayerMask whatIsGround;
     bool grounded;
 
-    [Header("Slope Handling")]
+    [Header("Miscellaneous")]
     public float maxSlopeAngle = 45f;
     public Transform orientation;
     private RaycastHit slopeHit;
     private bool exitingSlope;
+    private bool speedChangeFix = false;
 
     private bool drag;
     float horizontalInput;
@@ -314,12 +315,14 @@ public class PlayerMovementDashing : MonoBehaviour
         float time = 0;
         float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
-
-        float boostFactor = speedChangeFactor;
+        // How to correct speed change from not updating (WARNING BREAKS DASH-JUMPING) 
+        float boostFactor = speedChangeFactor; // <- Step 1) Remove this
 
         while (time < difference)
         {
             moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
+
+            // float boostFactor = speedChangeFactor; // Step 2) Uncomment this
 
             time += Time.deltaTime * boostFactor;
 
@@ -327,7 +330,7 @@ public class PlayerMovementDashing : MonoBehaviour
         }
 
         moveSpeed = desiredMoveSpeed;
-        speedChangeFactor = 1f;
+        speedChangeFactor = 1f; // Step 3) Remove this
         keepMomentum = false;
     }
 

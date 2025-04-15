@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
-    public float sensX;
-    public float sensY;
+    public float sensX = 0.2f;
+    public float sensY = 0.2f;
 
     public Transform orientation;
     public ProtagControls protagControls;
@@ -23,13 +23,14 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     private void OnEnable()
     {
         look = protagControls.Player.Look;
+        look.Enable();
     }
 
     private void OnDisable()
@@ -39,8 +40,8 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-        float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+        float mouseX = look.ReadValue<Vector2>().x * sensX;
+        float mouseY = look.ReadValue<Vector2>().y * sensY;
 
         yRotation += mouseX;
         xRotation -= mouseY;
@@ -49,7 +50,5 @@ public class CameraController : MonoBehaviour
         //this is used to rotate the camera BOTH axis but to rotate the player around only the Y axis. 
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
         orientation.rotation = Quaternion.Euler(0f, yRotation, 0);
-
-
     }
 }

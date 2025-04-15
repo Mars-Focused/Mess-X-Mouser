@@ -59,7 +59,6 @@ public class PlayerMovementDashing : MonoBehaviour
     public Transform orientation;
     private RaycastHit slopeHit;
     private bool exitingSlope;
-    private bool speedChangeFix = false;
 
     private bool drag;
     float horizontalInput;

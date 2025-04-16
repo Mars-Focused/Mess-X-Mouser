@@ -10,14 +10,16 @@ public class PlayerMovementDashing : MonoBehaviour
 {
     [Header("Walking")]
     public float walkSpeed = 12f;
-    public float walkSpeedChange = 1f;
+    public float walkSpeedChange = 20f;
     public float groundDrag = 4f;
-    private float moveSpeed; //This value is changed consistantly
+    public float moveSpeed; //This value is changed consistantly
+    public float speedChangeFactor;
 
     [Header("Jumping")]
     public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
     public float jumpCooldown = 0.2f;
     public float airMultiplier = 0.3f;
+    public float airSpeedChange = 5f;
     bool readyToJump;
     [HideInInspector] public bool jumping;
 
@@ -66,7 +68,6 @@ public class PlayerMovementDashing : MonoBehaviour
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private bool keepMomentum = false;
-    private float speedChangeFactor;
     private bool useGravity;
 
     Vector3 moveDirection;
@@ -267,6 +268,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 break;
             case MovementState.air:
                 desiredMoveSpeed = walkSpeed;
+                speedChangeFactor = airSpeedChange;
                 drag = false;
                 useGravity = true;
                 if (grounded)
@@ -314,14 +316,12 @@ public class PlayerMovementDashing : MonoBehaviour
         float time = 0;
         float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
-        // How to correct speed change from not updating (WARNING BREAKS DASH-JUMPING) 
-        float boostFactor = speedChangeFactor; // <- Step 1) Remove this
 
         while (time < difference)
         {
             moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
 
-            // float boostFactor = speedChangeFactor; // Step 2) Uncomment this
+            float boostFactor = speedChangeFactor;
 
             time += Time.deltaTime * boostFactor;
 
@@ -329,7 +329,6 @@ public class PlayerMovementDashing : MonoBehaviour
         }
 
         moveSpeed = desiredMoveSpeed;
-        speedChangeFactor = 1f; // Step 3) Remove this
         keepMomentum = false;
     }
 

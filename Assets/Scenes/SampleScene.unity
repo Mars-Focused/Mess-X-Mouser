@@ -1007,35 +1007,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115acb545808e184d9e6c8632d563cb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 12
-  walkSpeedChange: 1
-  groundDrag: 4
+  orientation: {fileID: 2077229903}
+  state: 0
+  moveSpeed: 0
+  speedChangeFactor: 0
   jumpForce: 10
-  jumpCooldown: 0.2
-  airMultiplier: 0.3
   jumping: 0
-  crouchSpeed: 5
-  crouchYScale: 0.5
-  crouchMultiplier: 0.1
-  crouchDownForce: 10
-  dashEndSpeedChange: 200
-  dashSpeed: 30
-  dashSpeedChange: 10
-  dashForce: 30
-  dashDuration: 0.18
-  dashEndDuration: 0.02
-  dashStamina: 1
-  dashCd: 0.21
   dashEnd: 0
   dashing: 0
-  staminaRegen: 2
-  playerHeight: 2
+  staminaRegen: 1
+  maxStamina: 2
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
-  maxSlopeAngle: 45
-  orientation: {fileID: 2077229903}
-  state: 0
 --- !u!114 &1551504185
 MonoBehaviour:
   m_ObjectHideFlags: 0

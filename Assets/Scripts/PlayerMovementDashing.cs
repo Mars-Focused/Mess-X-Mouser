@@ -8,57 +8,62 @@ using UnityEngine.UIElements;
 
 public class PlayerMovementDashing : MonoBehaviour
 {
+    [Header("Import")]
+    public Transform orientation;
+
+    [Header("Debugging")]
+    public MovementState state;
+    public float moveSpeed; //These values are changed consistantly
+    public float speedChangeFactor; //can be made public to show in inspector for debugging.
+
     [Header("Walking")]
-    public float walkSpeed = 12f;
-    public float walkSpeedChange = 20f;
-    public float groundDrag = 4f;
-    private float moveSpeed; //This value is changed consistantly
-    private float speedChangeFactor;
+    private readonly float WALK_SPEED = 12f;
+    private readonly float WALK_SPEED_CHANGE = 20f;
+    private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
     public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
-    public float jumpCooldown = 0.2f;
-    public float airMultiplier = 0.3f;
-    public float airSpeedChange = 5f;
+    private readonly float JUMP_COOLDOWN = 0.2f;
+    private readonly float AIR_MULTIPLIER = 0.3f;
+    private readonly float AIR_SPEED_CHANGE = 5f;
     bool readyToJump;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
-    public float crouchSpeed = 5f;
-    public float crouchYScale = 0.5f;
-    public float crouchMultiplier = 0.1f;
-    public float crouchDownForce = 10f; // it's a high number to be able to change direction Mid-air
+    private readonly float CROUCH_SPEED = 5f;
+    private readonly float CROUCH_Y_SCALE = 0.5f;
+    private readonly float CROUCH_MULTIPLIER = 0.1f;
+    private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
 
     [Header("Dashing")]
-    public float dashEndSpeedChange = 200f;
-    public float dashSpeed = 30f;
-    public float dashSpeedChange = 10f;
-    public float dashForce = 30f;
-    public float dashDuration = 0.18f;
-    public float dashEndDuration = 0.02f;
-    public float dashStamina = 1;
-    public float dashCd = 0.21f;
+    private readonly float DASH_END_SPEED_CHANGE = 200f;
+    private readonly float DASH_SPEED = 30f;
+    private readonly float DASH_SPEED_CHANGE = 10f;
+    private readonly float DASH_FORCE = 30f;
+    private readonly float DASH_DURATION = 0.18f;
+    private readonly float DASH_END_DURATION = 0.02f;
+    private readonly float DASH_STAMINA = 1;
+    private readonly float DASH_CD = 0.21f;
     private float dashCdTimer;
-    private Vector3 delayedForceToApply; // Nessesary for Dash to function.
+    private Vector3 delayedForceToApply; // Nessesary for Dash to function properly.
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
 
     [Header("Stamina")]
-    public float staminaRegen = 0.5f;
-    private readonly float MAX_STAMINA = 2f;
-    private float stamina = 2f;
-
-
+    public float staminaRegen = 2f;
+    public float maxStamina = 3f;
+    private float stamina;
+    
+    private readonly float PLAYER_HEIGHT = 2f;
+    
     [Header("Ground Check")]
-    public float playerHeight = 2f;
     public LayerMask whatIsGround;
     bool grounded;
+   
+    private readonly float MAX_SLOPE_ANGLE = 45f;
 
-    [Header("Miscellaneous")]
-    public float maxSlopeAngle = 45f;
-    public Transform orientation;
     private RaycastHit slopeHit;
     private bool exitingSlope;
 
@@ -81,8 +86,6 @@ public class PlayerMovementDashing : MonoBehaviour
 
     Rigidbody rb; // <-RIGIDBODY
 
-
-    public MovementState state;
     public enum MovementState
     {
         walking,
@@ -128,7 +131,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        stamina = MAX_STAMINA;
+        stamina = maxStamina;
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
@@ -139,7 +142,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
 
         MyInput();
         DashUpdates();
@@ -151,12 +154,12 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     private void StaminaRegenerator()
     {
-        if (stamina < MAX_STAMINA && grounded && !crouching && dashCdTimer == 0f)
+        if (stamina < maxStamina && grounded && !crouching && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
 
-        if (stamina > MAX_STAMINA)
+        if (stamina > maxStamina)
         {
             MaxOutStamina();
         }
@@ -164,13 +167,13 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MaxOutStamina()
     {
-        stamina = MAX_STAMINA;
+        stamina = maxStamina;
     }
 
     private void DragHandler()
     {
         if (drag == true)
-            rb.drag = groundDrag;
+            rb.drag = GROUND_DRAG;
         else
             rb.drag = 0;
     }
@@ -198,7 +201,7 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     public float GetPlayerMaxStamina()
     {
-        return MAX_STAMINA;
+        return maxStamina;
     }
 
 
@@ -213,19 +216,29 @@ public class PlayerMovementDashing : MonoBehaviour
         verticalInput = move.ReadValue<Vector2>().y;
     }
 
+    private bool StickNeutral()
+    {
+        if (horizontalInput < 0.1f && horizontalInput > -0.1f && verticalInput < 0.1f && verticalInput > -0.1f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
     private void Crouch(InputAction.CallbackContext context)
     {
         if (context.started)
         {
             crouching = true;
             ResetYVel();
-            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.down * CROUCH_DOWN_FORCE, ForceMode.Impulse);
         }
 
         if (context.performed && grounded)
         {
             state = MovementState.crouching;
-
         }
 
         if (context.canceled)
@@ -241,34 +254,34 @@ public class PlayerMovementDashing : MonoBehaviour
         switch (state)
         {
             case MovementState.walking:
-                desiredMoveSpeed = walkSpeed;
-                speedChangeFactor = walkSpeedChange;
+                desiredMoveSpeed = WALK_SPEED;
+                speedChangeFactor = WALK_SPEED_CHANGE;
                 useGravity = false;
                 drag = true;
                 if (!grounded) state = MovementState.air;
                 if (crouching) state = MovementState.crouching;
                 break;
             case MovementState.crouching:
-                desiredMoveSpeed = crouchSpeed;
+                desiredMoveSpeed = CROUCH_SPEED;
                 drag = false;
-                useGravity = true;
-                transform.localScale = new Vector3(transform.localScale.x, crouchYScale, transform.localScale.z);
+                useGravity = StickNeutral();
+                transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 break;
             case MovementState.dashing:
-                desiredMoveSpeed = dashSpeed;
-                speedChangeFactor = dashSpeedChange;
+                desiredMoveSpeed = DASH_SPEED;
+                speedChangeFactor = DASH_SPEED_CHANGE;
                 drag = false;
                 useGravity = false;
                 break;
             case MovementState.dashend:
-                desiredMoveSpeed = walkSpeed;
-                speedChangeFactor = dashEndSpeedChange;
+                desiredMoveSpeed = WALK_SPEED;
+                speedChangeFactor = DASH_END_SPEED_CHANGE;
                 drag = true;
                 useGravity = false;
                 break;
             case MovementState.air:
-                desiredMoveSpeed = walkSpeed;
-                speedChangeFactor = airSpeedChange;
+                desiredMoveSpeed = WALK_SPEED;
+                speedChangeFactor = AIR_SPEED_CHANGE;
                 drag = false;
                 useGravity = true;
                 if (grounded)
@@ -351,7 +364,7 @@ public class PlayerMovementDashing : MonoBehaviour
         // DOTO: CONSOLIDATE THIS CODE
         // while crouching
         else if (crouching)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * crouchMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * CROUCH_MULTIPLIER, ForceMode.Force);
 
         // on ground
         else if (grounded)
@@ -359,7 +372,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
         // in air
         else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * airMultiplier, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * AIR_MULTIPLIER, ForceMode.Force);
 
         // turn gravity off while on slope
         rb.useGravity = useGravity;
@@ -401,7 +414,7 @@ public class PlayerMovementDashing : MonoBehaviour
         readyToJump = false;
         exitingSlope = true;
         jumping = true;
-        Invoke(nameof(ResetJump), jumpCooldown);
+        Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
@@ -415,10 +428,10 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, PLAYER_HEIGHT * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            return angle < MAX_SLOPE_ANGLE && angle != 0;
         }
 
         return false;
@@ -439,7 +452,7 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         if (dashCdTimer > 0)
             dashCdTimer -= Time.deltaTime;
-            dashCdTimer = Mathf.Clamp(dashCdTimer, 0f, MAX_STAMINA);
+            dashCdTimer = Mathf.Clamp(dashCdTimer, 0f, maxStamina);
 
         if (jumping == true || state == MovementState.crouching)
             CancelInvoke(nameof(DashEnd));
@@ -447,10 +460,10 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void Dash(InputAction.CallbackContext context)
     {
-        if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
+        if (dashCdTimer > 0 || !StaminaCheck(DASH_STAMINA)) return;
         else
-            StaminaConsume(dashStamina);
-        dashCdTimer = dashCd;
+            StaminaConsume(DASH_STAMINA);
+        dashCdTimer = DASH_CD;
         state = MovementState.dashing;
 
         dashing = true;
@@ -463,7 +476,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
         Vector3 direction = GetDirection(forwardT);
 
-        Vector3 forceToApply = direction * dashForce;
+        Vector3 forceToApply = direction * DASH_FORCE;
 
 
 
@@ -472,8 +485,8 @@ public class PlayerMovementDashing : MonoBehaviour
         delayedForceToApply = forceToApply;
         Invoke(nameof(DelayedDashForce), 0.025f);
 
-        Invoke(nameof(DashEnd), dashDuration);
-        Invoke(nameof(ResetDash), dashDuration + dashEndDuration);
+        Invoke(nameof(DashEnd), DASH_DURATION);
+        Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
     }
 
     private void DelayedDashForce()

@@ -12,8 +12,8 @@ public class PlayerMovementDashing : MonoBehaviour
     public float walkSpeed = 12f;
     public float walkSpeedChange = 20f;
     public float groundDrag = 4f;
-    public float moveSpeed; //This value is changed consistantly
-    public float speedChangeFactor;
+    private float moveSpeed; //This value is changed consistantly
+    private float speedChangeFactor;
 
     [Header("Jumping")]
     public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
@@ -151,7 +151,7 @@ public class PlayerMovementDashing : MonoBehaviour
     }
     private void StaminaRegenerator()
     {
-        if (stamina < MAX_STAMINA && grounded && dashCdTimer == 0f)
+        if (stamina < MAX_STAMINA && grounded && !crouching && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
@@ -464,6 +464,8 @@ public class PlayerMovementDashing : MonoBehaviour
         Vector3 direction = GetDirection(forwardT);
 
         Vector3 forceToApply = direction * dashForce;
+
+
 
         rb.useGravity = false;
 

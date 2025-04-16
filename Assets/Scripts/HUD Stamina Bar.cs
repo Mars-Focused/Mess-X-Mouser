@@ -8,7 +8,6 @@ public class HUDStaminaBar : MonoBehaviour
     private Image barImage;
     PlayerMovementDashing pm;
 
-
     private void Awake()
     {
         barImage = transform.Find("Bar").GetComponent<Image>();

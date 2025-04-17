@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
@@ -23,7 +24,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     [Header("Jumping")]
     public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
-    private readonly float JUMP_COOLDOWN = 0.2f;
+    private readonly float JUMP_COOLDOWN = 0.05f;
     private readonly float AIR_MULTIPLIER = 0.3f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     bool readyToJump;
@@ -204,7 +205,6 @@ public class PlayerMovementDashing : MonoBehaviour
         return maxStamina;
     }
 
-
     private void FixedUpdate()
     {
         MovePlayer();
@@ -266,6 +266,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 drag = false;
                 useGravity = StickNeutral();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
+                if (!grounded) state = MovementState.air;
                 break;
             case MovementState.dashing:
                 desiredMoveSpeed = DASH_SPEED;
@@ -287,6 +288,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 if (grounded)
                 {
                     if (crouching) state = MovementState.crouching;
+                    else if (dashEnd) state = MovementState.dashend;
                     else state = MovementState.walking;
                 }
                 break;
@@ -295,7 +297,7 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void MomentumHandler()
     {
-        if (lastDesiredMoveSpeed > desiredMoveSpeed && state != MovementState.dashend)
+        if (moveSpeed >= desiredMoveSpeed && state != MovementState.dashend)
         {
             keepMomentum = true;
         }
@@ -305,7 +307,6 @@ public class PlayerMovementDashing : MonoBehaviour
         }
 
         bool desiredMoveSpeedHasChanged = desiredMoveSpeed != lastDesiredMoveSpeed;
-        lastDesiredMoveSpeed = desiredMoveSpeed;
         if (desiredMoveSpeedHasChanged)
         {
             if (keepMomentum)

@@ -1015,8 +1015,9 @@ MonoBehaviour:
   jumping: 0
   dashEnd: 0
   dashing: 0
-  staminaRegen: 1
-  maxStamina: 2
+  speedMomentum: 0
+  staminaRegen: 2
+  maxStamina: 3
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128

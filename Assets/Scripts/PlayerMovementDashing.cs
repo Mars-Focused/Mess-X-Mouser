@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -23,11 +24,13 @@ public class PlayerMovementDashing : MonoBehaviour
     private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
-    public float jumpForce = 10f; //TODO: change value to jump height and do some Maths
+    public float jumpHeight = 2.5f;
+    public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.05f;
     private readonly float AIR_MULTIPLIER = 0.3f;
     private readonly float AIR_SPEED_CHANGE = 5f;
-    bool readyToJump;
+    private bool readyToJump;
+    private float jumpForce;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
@@ -138,6 +141,7 @@ public class PlayerMovementDashing : MonoBehaviour
         dashing = false;
         readyToJump = true;
         startYScale = transform.localScale.y;
+        Physics.gravity = new Vector3(0f, CUSTOM_GRAVITY, 0f);
     }
 
     private void Update()
@@ -415,6 +419,7 @@ public class PlayerMovementDashing : MonoBehaviour
         readyToJump = false;
         exitingSlope = true;
         jumping = true;
+        jumpForce = Mathf.Sqrt(-2f * jumpHeight * Physics.gravity.y);
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);

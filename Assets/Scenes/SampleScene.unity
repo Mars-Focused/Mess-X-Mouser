@@ -1011,11 +1011,10 @@ MonoBehaviour:
   state: 0
   moveSpeed: 0
   speedChangeFactor: 0
-  jumpForce: 10
+  jumpHeight: 2.5
   jumping: 0
   dashEnd: 0
   dashing: 0
-  speedMomentum: 0
   staminaRegen: 2
   maxStamina: 3
   whatIsGround:

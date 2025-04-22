@@ -31,6 +31,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool readyToJump;
     private float jumpForce;
+    public float jumpStamina = 1f;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
@@ -414,7 +415,18 @@ public class PlayerMovementDashing : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (!grounded || !readyToJump) return;
+        if (!readyToJump) return;
+        if (dashing || !grounded)
+        {
+            if (StaminaCheck(jumpStamina))
+            {
+                StaminaConsume(jumpStamina);
+            }
+            else 
+            {
+                return;
+            }
+        }
         state = MovementState.air;
         readyToJump = false;
         exitingSlope = true;

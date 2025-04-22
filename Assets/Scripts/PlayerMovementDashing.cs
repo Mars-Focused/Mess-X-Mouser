@@ -32,6 +32,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private bool readyToJump;
     private float jumpForce;
     public float jumpStamina = 1f;
+    private bool mayDoubleJump;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
@@ -142,6 +143,8 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         stamina = maxStamina;
+        health = maxHealth;
+        mayDoubleJump = true;
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
@@ -154,6 +157,12 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
+
+        if (grounded && !mayDoubleJump && !exitingSlope)
+        {
+            mayDoubleJump = true;
+            Debug.Log("Double Jump Active");
+        }
 
         MyInput();
         DashUpdates();
@@ -454,9 +463,11 @@ public class PlayerMovementDashing : MonoBehaviour
         if (!readyToJump) return;
         if (dashing || !grounded)
         {
-            if (StaminaCheck(jumpStamina))
+            if (StaminaCheck(jumpStamina) && mayDoubleJump)
             {
                 StaminaConsume(jumpStamina);
+                mayDoubleJump = false;
+                Debug.Log("Double Jump Used");
             }
             else 
             {

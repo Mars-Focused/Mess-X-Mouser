@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HUDStaminaBar : MonoBehaviour
+public class HUDHealthBar : MonoBehaviour
 {
     private Image barImage;
     PlayerMovementDashing pm;
@@ -20,8 +20,8 @@ public class HUDStaminaBar : MonoBehaviour
 
     private void Update()
     {
-        float stamina = pm.GetPlayerStamina();
-        float maxStamina = pm.GetPlayerMaxStamina();
+        float stamina = pm.GetPlayerHealth();
+        float maxStamina = pm.GetPlayerMaxHealth();
         barImage.fillAmount = stamina / maxStamina;
     }
 }

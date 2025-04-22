@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Dashing.cs" />
     <Compile Include="Assets\Supers\Enemy.cs" />
     <Compile Include="Assets\Scripts\ProtagControls.cs" />
+    <Compile Include="Assets\Scripts\HUD Health Bar.cs" />
     <Compile Include="Assets\Scripts\View_Controller.cs" />
     <Compile Include="Assets\Supers\Projectile.cs" />
     <Compile Include="Assets\Interfaces\IDamagable.cs" />

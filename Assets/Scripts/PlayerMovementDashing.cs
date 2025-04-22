@@ -103,7 +103,8 @@ public class PlayerMovementDashing : MonoBehaviour
         crouching,
         dashing,
         dashend,
-        air
+        air,
+        dead
     }
 
     private void Awake()
@@ -303,6 +304,12 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         switch (state)
         {
+            case MovementState.dead:
+                desiredMoveSpeed = 0;
+                speedChangeFactor = 0;
+                useGravity = true;
+                drag = true;
+                break;
             case MovementState.walking:
                 desiredMoveSpeed = WALK_SPEED;
                 speedChangeFactor = WALK_SPEED_CHANGE;

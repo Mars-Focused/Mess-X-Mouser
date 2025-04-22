@@ -161,7 +161,7 @@ public class PlayerMovementDashing : MonoBehaviour
         if (grounded && !mayDoubleJump && !exitingSlope)
         {
             mayDoubleJump = true;
-            Debug.Log("Double Jump Active");
+            //Debug.Log("Double Jump Active");
         }
 
         MyInput();
@@ -467,7 +467,7 @@ public class PlayerMovementDashing : MonoBehaviour
             {
                 StaminaConsume(jumpStamina);
                 mayDoubleJump = false;
-                Debug.Log("Double Jump Used");
+                //Debug.Log("Double Jump Used");
             }
             else 
             {

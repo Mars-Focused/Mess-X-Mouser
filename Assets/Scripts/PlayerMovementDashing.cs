@@ -64,6 +64,7 @@ public class PlayerMovementDashing : MonoBehaviour
     [Header("Health")]
     public float maxHealth = 1000f;
     private float health;
+    private bool alive;
     
     private readonly float PLAYER_HEIGHT = 2f;
     
@@ -215,6 +216,10 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         health -= ammount;
         Mathf.Clamp(health, 0, maxHealth);
+        if (health <= 0) 
+        {  
+            alive = false; 
+        }
     }
 
     private void HealthGain(float ammount)

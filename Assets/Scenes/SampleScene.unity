@@ -1012,10 +1012,11 @@ MonoBehaviour:
   moveSpeed: 0
   speedChangeFactor: 0
   jumpHeight: 2.5
+  jumpStamina: 1
   jumping: 0
   dashEnd: 0
   dashing: 0
-  staminaRegen: 2
+  staminaRegen: 4
   maxStamina: 3
   whatIsGround:
     serializedVersion: 2

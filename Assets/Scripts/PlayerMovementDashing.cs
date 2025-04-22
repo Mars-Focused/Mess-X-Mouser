@@ -60,6 +60,10 @@ public class PlayerMovementDashing : MonoBehaviour
     public float staminaRegen = 2f;
     public float maxStamina = 3f;
     private float stamina;
+
+    [Header("Health")]
+    public float maxHealth = 1000f;
+    private float health;
     
     private readonly float PLAYER_HEIGHT = 2f;
     
@@ -176,14 +180,6 @@ public class PlayerMovementDashing : MonoBehaviour
         stamina = maxStamina;
     }
 
-    private void DragHandler()
-    {
-        if (drag == true)
-            rb.drag = GROUND_DRAG;
-        else
-            rb.drag = 0;
-    }
-
     private void StaminaConsume(float ammount)
     {
         stamina -= ammount;
@@ -208,6 +204,41 @@ public class PlayerMovementDashing : MonoBehaviour
     public float GetPlayerMaxStamina()
     {
         return maxStamina;
+    }
+
+    private void MaxOutHealth()
+    {
+        health = maxHealth;
+    }
+
+    private void HealthLoss(float ammount)
+    {
+        health -= ammount;
+        Mathf.Clamp(health, 0, maxHealth);
+    }
+
+    private void HealthGain(float ammount)
+    {
+        health += ammount;
+        Mathf.Clamp(health, 0, maxHealth);
+    }
+
+    public float GetPlayerHealth() 
+    { 
+        return health; 
+    }
+
+    public float GetPlayerMaxHealth()
+    {
+        return maxHealth;
+    }
+
+    private void DragHandler()
+    {
+        if (drag == true)
+            rb.drag = GROUND_DRAG;
+        else
+            rb.drag = 0;
     }
 
     private void FixedUpdate()

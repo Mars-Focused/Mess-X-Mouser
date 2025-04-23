@@ -309,6 +309,7 @@ public class PlayerMovementDashing : MonoBehaviour
                 speedChangeFactor = 0;
                 useGravity = true;
                 drag = true;
+                //TODO: Add Dying to code.
                 break;
             case MovementState.walking:
                 desiredMoveSpeed = WALK_SPEED;

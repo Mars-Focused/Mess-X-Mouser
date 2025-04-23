@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using Assets.Interfaces;
 //using System.Collections.Generic;
 //using TMPro;
 //using System;
@@ -222,7 +223,7 @@ public class PlayerMovementDashing : MonoBehaviour
         health = maxHealth;
     }
 
-    private void HealthLoss(float ammount)
+    private void Damage(float ammount)
     {
         health -= ammount;
         Mathf.Clamp(health, 0, maxHealth);

@@ -43,6 +43,7 @@ public class PlayerMovementDashing : MonoBehaviour
     private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
+    private float crouchStamina = 0.5f;
 
     [Header("Dashing")]
     private readonly float DASH_END_SPEED_CHANGE = 200f;
@@ -283,6 +284,17 @@ public class PlayerMovementDashing : MonoBehaviour
     {
         if (context.started)
         {
+            if (dashing && grounded)
+            {
+                if (StaminaCheck(crouchStamina))
+                {
+                    StaminaConsume(crouchStamina);
+                }
+                else
+                {
+                    return;
+                }
+            }
             crouching = true;
             ResetYVel();
             rb.AddForce(Vector3.down * CROUCH_DOWN_FORCE, ForceMode.Impulse);

@@ -25,15 +25,20 @@ public class PlayerMovementDashing : MonoBehaviour
     private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
-    public float jumpHeight = 2.5f;
+    public float normalJumpHeight = 2.5f;
+    public float superJumpHeight = 10f;
+    public float superJumpChargeTime = 0.5f;
+    public float superJumpJuice;
     public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.05f;
     private readonly float AIR_MULTIPLIER = 0.3f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool readyToJump;
     private float jumpForce;
-    public float jumpStamina = 1f;
+    public float normalJumpStamina = 1f;
+    public float superJumpStamina = 1f;
     private bool mayDoubleJump;
+    private float usedJumpHeight;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
@@ -172,8 +177,22 @@ public class PlayerMovementDashing : MonoBehaviour
         SpeedControl();
         StateHandler();
         StaminaRegenerator();
+        SuperJumpCharger();
         MomentumHandler();
         DragHandler();
+    }
+
+    private void SuperJumpCharger()
+    {
+        if (grounded && crouching && moveSpeed <= WALK_SPEED)
+        {
+            superJumpJuice += Time.deltaTime;
+            superJumpJuice = Mathf.Clamp(superJumpJuice, 0f, superJumpChargeTime);
+        }
+        else 
+        {
+            superJumpJuice = 0f;
+        }
     }
     private void StaminaRegenerator()
     {
@@ -227,8 +246,8 @@ public class PlayerMovementDashing : MonoBehaviour
     private void Damage(float ammount)
     {
         health -= ammount;
-        Mathf.Clamp(health, 0, maxHealth);
-        if (health <= 0) 
+        health = Mathf.Clamp(health, 0, maxHealth);
+        if (health == 0) 
         {  
             alive = false; 
         }
@@ -484,9 +503,9 @@ public class PlayerMovementDashing : MonoBehaviour
         if (!readyToJump) return;
         if (dashing || !grounded)
         {
-            if (StaminaCheck(jumpStamina) && mayDoubleJump)
+            if (StaminaCheck(normalJumpStamina) && mayDoubleJump)
             {
-                StaminaConsume(jumpStamina);
+                StaminaConsume(normalJumpStamina);
                 mayDoubleJump = false;
                 //Debug.Log("Double Jump Used");
             }
@@ -495,11 +514,29 @@ public class PlayerMovementDashing : MonoBehaviour
                 return;
             }
         }
+        if (superJumpJuice == superJumpChargeTime) 
+        { 
+            if (StaminaCheck(superJumpStamina))
+            {
+                StaminaConsume(superJumpStamina);
+                usedJumpHeight = superJumpHeight;
+                mayDoubleJump = false;
+            }
+            else
+            {
+                return;
+            }
+
+        }
+        else
+        {
+            usedJumpHeight = normalJumpHeight;
+        }
         state = MovementState.air;
         readyToJump = false;
         exitingSlope = true;
         jumping = true;
-        jumpForce = Mathf.Sqrt(-2f * jumpHeight * Physics.gravity.y);
+        jumpForce = Mathf.Sqrt(-2f * usedJumpHeight * Physics.gravity.y);
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);

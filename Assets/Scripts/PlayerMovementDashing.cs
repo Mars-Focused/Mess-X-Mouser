@@ -30,14 +30,14 @@ public class PlayerMovementDashing : MonoBehaviour
     public float superJumpChargeTime = 0.5f;
     public float superJumpJuice;
     public readonly float CUSTOM_GRAVITY = -18f;
-    private readonly float JUMP_COOLDOWN = 0.05f;
+    private readonly float JUMP_COOLDOWN = 0.1f;
     private readonly float AIR_MULTIPLIER = 0.3f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool readyToJump;
     private float jumpForce;
     public float normalJumpStamina = 1f;
     public float superJumpStamina = 1f;
-    private bool mayDoubleJump;
+    public bool mayDoubleJump;
     private float usedJumpHeight;
     [HideInInspector] public bool jumping;
 

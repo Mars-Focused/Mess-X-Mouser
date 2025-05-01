@@ -9,7 +9,7 @@ using Assets.Interfaces;
 //using TMPro;
 //using System;
 
-public class PlayerMovementDashing : MonoBehaviour
+public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
     [Header("Import")]
     public Transform orientation;
@@ -243,7 +243,7 @@ public class PlayerMovementDashing : MonoBehaviour
         health = maxHealth;
     }
 
-    private void Damage(float ammount)
+    public void Damage(float ammount)
     {
         health -= ammount;
         health = Mathf.Clamp(health, 0, maxHealth);

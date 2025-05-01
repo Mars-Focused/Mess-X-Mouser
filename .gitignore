@@ -111,4 +111,7 @@
 /UnityEngine.TestRunner.Player.csproj
 /UnityEngine.UI.csproj
 /UnityEngine.UI.Player.csproj
-/obj/Debug/MerryYellow.CodeAssist.Editor.csproj.AssemblyReference.cache
+/obj/Debug/*
+/Assembly-CSharp.csproj
+.vs/Mars/v16/*
+

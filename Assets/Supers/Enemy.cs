@@ -2,7 +2,7 @@
 
 namespace Assets.Supers
 {
-    abstract class Enemy : IDamagable
+    abstract class Enemy : IDamageable
     {
         float health;
         float damage;

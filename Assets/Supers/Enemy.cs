@@ -1,12 +1,16 @@
 ﻿using Assets.Interfaces;
+using UnityEngine;
+;
 
 namespace Assets.Supers
 {
     abstract class Enemy : IDamageable
     {
         float health;
+        float maxHealth;
         float damage;
         float speed;
+        bool alive;
         public Enemy()
         {
             //code to init a base enemy
@@ -20,6 +24,16 @@ namespace Assets.Supers
             this.health = health;
             this.damage = damage;
             this.speed = speed;
+        }
+
+        public void Damage(float ammount)
+        {
+            health -= ammount;
+            health = Mathf.Clamp(health, 0, maxHealth);
+            if (health == 0)
+            {
+                alive = false;
+            }
         }
 
     }

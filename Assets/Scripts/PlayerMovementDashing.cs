@@ -13,6 +13,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
     [Header("Import")]
     public Transform orientation;
+    public Transform playerCamOrientation;
 
     [Header("Debugging")]
     public MovementState state;
@@ -38,7 +39,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float normalJumpStamina = 1f;
     public float superJumpStamina = 1f;
     public bool mayDoubleJump;
+    private bool doubleJumpLocked;
     private float usedJumpHeight;
+    private float usedDashDuration;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
@@ -56,6 +59,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float DASH_SPEED_CHANGE = 10f;
     private readonly float DASH_FORCE = 30f;
     private readonly float DASH_DURATION = 0.18f;
+    private readonly float superDashDuration = 0.3f;
     private readonly float DASH_END_DURATION = 0.02f;
     private readonly float DASH_STAMINA = 1;
     private readonly float DASH_CD = 0.21f;
@@ -166,7 +170,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         // ground check
         grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
 
-        if (grounded && !mayDoubleJump && !exitingSlope)
+        if (grounded && !mayDoubleJump && !doubleJumpLocked)
         {
             mayDoubleJump = true;
             //Debug.Log("Double Jump Active");
@@ -192,6 +196,30 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         else 
         {
             superJumpJuice = 0f;
+        }
+    }
+
+    private void LockOutDoubleJump()
+    {
+        mayDoubleJump = false;
+        doubleJumpLocked = true;
+        Invoke(nameof(UnlockDoubleJump), 0.2f);
+    }
+
+    private void UnlockDoubleJump()
+    {
+        doubleJumpLocked = false;
+    }
+
+    private bool Juiced()
+    {
+        if (superJumpJuice == superJumpChargeTime)
+        {
+            return true;
+        }
+        else
+        { 
+            return false;
         }
     }
     private void StaminaRegenerator()
@@ -506,7 +534,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             if (StaminaCheck(normalJumpStamina) && mayDoubleJump)
             {
                 StaminaConsume(normalJumpStamina);
-                mayDoubleJump = false;
+                LockOutDoubleJump();
                 //Debug.Log("Double Jump Used");
             }
             else 
@@ -520,7 +548,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             {
                 StaminaConsume(superJumpStamina);
                 usedJumpHeight = superJumpHeight;
-                mayDoubleJump = false;
+                LockOutDoubleJump();
             }
             else
             {
@@ -584,32 +612,40 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void Dash(InputAction.CallbackContext context)
     {
         if (dashCdTimer > 0 || !StaminaCheck(DASH_STAMINA)) return;
-        else
-            StaminaConsume(DASH_STAMINA);
+
+        //Transform forwardT;
+        //forwardT = orientation;
+        Vector3 usedDashDirection;
+
+        if (Juiced())
+        {
+            usedDashDuration = superDashDuration;
+            LockOutDoubleJump();
+            //playerCamOrientation.transform.rotation.x
+            usedDashDirection = playerCamOrientation.forward;
+            Invoke(nameof(ResetDash), superDashDuration);
+        }
+        else 
+        {
+            usedDashDuration = DASH_DURATION;
+            usedDashDirection = GetDirection(orientation); /// where you're facing (no up or down)
+            Invoke(nameof(DashEnd), DASH_DURATION);
+            Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
+        }
+
+        StaminaConsume(DASH_STAMINA);
         dashCdTimer = DASH_CD;
         state = MovementState.dashing;
 
         dashing = true;
 
         //cam.DoFov(dashFov);
-
-        Transform forwardT;
-
-        forwardT = orientation; /// where you're facing (no up or down)
-
-        Vector3 direction = GetDirection(forwardT);
-
-        Vector3 forceToApply = direction * DASH_FORCE;
-
-
-
-        rb.useGravity = false;
+        Vector3 forceToApply = usedDashDirection * DASH_FORCE;
 
         delayedForceToApply = forceToApply;
-        Invoke(nameof(DelayedDashForce), 0.025f);
-
-        Invoke(nameof(DashEnd), DASH_DURATION);
-        Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
+        //Invoke(nameof(DelayedDashForce), 0.025f);
+        state = MovementState.dashing;
+        DelayedDashForce();
     }
 
     private void DelayedDashForce()
@@ -653,7 +689,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
         direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
 
-        if (verticalInput == 0 && horizontalInput == 0)
+        if (StickNeutral())
             direction = forwardT.forward;
 
         return direction.normalized;

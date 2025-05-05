@@ -67,6 +67,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private Vector3 delayedForceToApply; // Nessesary for Dash to function properly.
     [HideInInspector] public bool dashEnd;
     [HideInInspector] public bool dashing;
+    private bool superDashing;
+    private bool maySuperDash = false;
 
     [Header("Stamina")]
     public float staminaRegen = 2f;
@@ -221,7 +223,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         { 
             return false;
         }
-    }
+    } //"Juice" is aquired by standing still and crouching. like a cat ready to pounce
     private void StaminaRegenerator()
     {
         if (stamina < maxStamina && grounded && !crouching && dashCdTimer == 0f)
@@ -371,6 +373,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 drag = true;
                 //TODO: Add Dying to code.
                 break;
+            case MovementState.dashend:
+                desiredMoveSpeed = WALK_SPEED;
+                speedChangeFactor = DASH_END_SPEED_CHANGE;
+                drag = true;
+                useGravity = false;
+                break;
             case MovementState.walking:
                 desiredMoveSpeed = WALK_SPEED;
                 speedChangeFactor = WALK_SPEED_CHANGE;
@@ -390,13 +398,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 desiredMoveSpeed = DASH_SPEED;
                 speedChangeFactor = DASH_SPEED_CHANGE;
                 drag = false;
-                useGravity = false;
-                break;
-            case MovementState.dashend:
-                desiredMoveSpeed = WALK_SPEED;
-                speedChangeFactor = DASH_END_SPEED_CHANGE;
-                drag = true;
-                useGravity = false;
+                useGravity = superDashing;
+                if (dashEnd) state = MovementState.dashend;
                 break;
             case MovementState.air:
                 desiredMoveSpeed = WALK_SPEED;
@@ -542,7 +545,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 return;
             }
         }
-        if (superJumpJuice == superJumpChargeTime) 
+        if (Juiced()) 
         { 
             if (StaminaCheck(superJumpStamina))
             {
@@ -554,7 +557,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             {
                 return;
             }
-
         }
         else
         {
@@ -564,7 +566,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         readyToJump = false;
         exitingSlope = true;
         jumping = true;
-        jumpForce = Mathf.Sqrt(-2f * usedJumpHeight * Physics.gravity.y);
+        jumpForce = Mathf.Sqrt(-2f * usedJumpHeight * Physics.gravity.y); // Typically about 19 for a super Jump
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
@@ -617,13 +619,16 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         //forwardT = orientation;
         Vector3 usedDashDirection;
 
-        if (Juiced())
+        if (Juiced() && maySuperDash)
         {
             usedDashDuration = superDashDuration;
             LockOutDoubleJump();
-            //playerCamOrientation.transform.rotation.x
-            usedDashDirection = playerCamOrientation.forward;
-            Invoke(nameof(ResetDash), superDashDuration);
+            Vector3 superDashDirection = GetSuperDashDirection();
+            //Debug.Log("Dash Direction: " + superDashDirection.x);
+            usedDashDirection = superDashDirection;
+            superDashing = true;
+            Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
+            //Debug.Log("SUPERDASH!!!");
         }
         else 
         {
@@ -648,16 +653,39 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         DelayedDashForce();
     }
 
+    private Vector3 GetSuperDashDirection()
+    {
+        Vector3 direction = new Vector3();
+        Transform camera = playerCamOrientation;
+        // float horizontalAngle = camera.rotation.y;
+        // float verticalAngle = camera.rotation.x;
+        //Debug.Log("Vertical Angle: " + camera.localEulerAngles.ToString());
+        /*
+        float verticalAngleDegrees = Mathf.Rad2Deg * verticalAngle;
+        verticalAngle = Mathf.Clamp(verticalAngle, -30f, 90f);
+        direction = Quaternion.Euler(horizontalAngle, verticalAngle, 0f).eulerAngles;
+        */
+        direction = camera.forward;
+        return direction;
+    }
+
+    private Vector3 VerticalLimiter(Vector3 vector)
+    {
+        Vector3 returnedVector;
+        returnedVector = vector;
+        returnedVector.y = Mathf.Clamp(vector.y, -300f, 18.9f); // This line limits jump height to prevent player from jumping higher than super Jump. TODO: Add more flexibility
+        return returnedVector;
+    }
     private void DelayedDashForce()
     {
         rb.velocity = Vector3.zero;
 
-        rb.AddForce(delayedForceToApply, ForceMode.Impulse);
+        rb.AddForce(VerticalLimiter(delayedForceToApply), ForceMode.Impulse);
     }
 
     private void DashEnd()
     {
-        //Debug.Log("Dashend");
+        Debug.Log("Dashend");
         state = MovementState.dashend;
         dashing = false;
         dashEnd = true;
@@ -666,6 +694,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void ResetDash()
     {
         dashing = false;
+        superDashing = false;
         dashEnd = false;
         rb.useGravity = true;
 

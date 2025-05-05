@@ -1134,6 +1134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 2077229903}
+  playerCamOrientation: {fileID: 963194228}
   state: 0
   moveSpeed: 0
   speedChangeFactor: 0

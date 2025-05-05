@@ -685,7 +685,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void DashEnd()
     {
-        Debug.Log("Dashend");
+        //Debug.Log("Dashend");
         state = MovementState.dashend;
         dashing = false;
         dashEnd = true;

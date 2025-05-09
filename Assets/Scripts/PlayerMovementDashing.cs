@@ -193,6 +193,10 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             DragHandler();
             */
         }
+        else if (!alive)
+        {
+            Dying();
+        }
     }
 
     private void TotalProtagControl()
@@ -299,10 +303,22 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         health = Mathf.Clamp(health, 0, maxHealth);
         if (health == 0) 
         {  
-            alive = false; 
+            alive = false;
+            Dying();
         }
     }
 
+    public void Dying()
+    {
+        if (!alive)
+        {
+            protagControls.Disable();
+        }
+        else if (alive)
+        {
+            protagControls.Enable();
+        }
+    }
     private void HealthGain(float ammount)
     {
         health += ammount;

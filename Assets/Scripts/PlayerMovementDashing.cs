@@ -78,7 +78,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     [Header("Health")]
     public float maxHealth = 1000f;
     private float health;
-    private bool alive;
+    public bool alive;
     
     private readonly float PLAYER_HEIGHT = 2f;
     
@@ -158,6 +158,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb = GetComponent<Rigidbody>();
         stamina = maxStamina;
         health = maxHealth;
+        alive = true;
         mayDoubleJump = true;
         rb.freezeRotation = true;
         dashEnd = false;
@@ -178,6 +179,24 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             //Debug.Log("Double Jump Active");
         }
 
+        if (alive)
+        {
+            TotalProtagControl();
+            /*
+            MyInput();
+            DashUpdates();
+            SpeedControl();
+            StateHandler();
+            StaminaRegenerator();
+            SuperJumpCharger();
+            MomentumHandler();
+            DragHandler();
+            */
+        }
+    }
+
+    private void TotalProtagControl()
+    {
         MyInput();
         DashUpdates();
         SpeedControl();
@@ -187,6 +206,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         MomentumHandler();
         DragHandler();
     }
+    
 
     private void SuperJumpCharger()
     {
@@ -372,18 +392,21 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 useGravity = true;
                 drag = true;
                 //TODO: Add Dying to code.
+                //if (alive) state = MovementState.walking;
                 break;
             case MovementState.dashend:
                 desiredMoveSpeed = WALK_SPEED;
                 speedChangeFactor = DASH_END_SPEED_CHANGE;
                 drag = true;
                 useGravity = false;
+                if (!alive) state = MovementState.dead;
                 break;
             case MovementState.walking:
                 desiredMoveSpeed = WALK_SPEED;
                 speedChangeFactor = WALK_SPEED_CHANGE;
                 useGravity = false;
                 drag = true;
+                if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
                 if (crouching) state = MovementState.crouching;
                 break;
@@ -392,6 +415,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 drag = false;
                 useGravity = StickNeutral();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
+                if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
                 break;
             case MovementState.dashing:
@@ -399,6 +423,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 speedChangeFactor = DASH_SPEED_CHANGE;
                 drag = false;
                 useGravity = superDashing;
+                if (!alive) state = MovementState.dead;
                 if (dashEnd) state = MovementState.dashend;
                 break;
             case MovementState.air:
@@ -406,6 +431,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 speedChangeFactor = AIR_SPEED_CHANGE;
                 drag = false;
                 useGravity = true;
+                if (!alive) state = MovementState.dead;
                 if (grounded)
                 {
                     if (crouching) state = MovementState.crouching;

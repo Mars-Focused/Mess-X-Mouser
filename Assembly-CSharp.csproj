@@ -71,6 +71,8 @@
     <Compile Include="Assets\Scripts\HUD Health Bar.cs" />
     <Compile Include="Assets\Scripts\View_Controller.cs" />
     <Compile Include="Assets\Supers\Projectile.cs" />
+    <Compile Include="Assets\Scriptable Obj\Test Scriptable Object.cs" />
+    <Compile Include="Assets\Scriptable Obj\Circle Spawn Data.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

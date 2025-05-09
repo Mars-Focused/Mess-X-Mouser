@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 198b1bb2e7222c244a5e7a52b27a5293, type: 3}
-  m_Name: CircleSpawnData
+  m_Name: Ramp Circle
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
-  numberOfObjects: 0
-  radius: 0
+  prefab: {fileID: 7924155495896090679, guid: 1b3144b291a44bb449e4942edeac5e01, type: 3}
+  numberOfObjects: 24
+  radius: 80

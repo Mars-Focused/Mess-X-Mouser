@@ -18,7 +18,7 @@ public class PreefabCircleSpawner : MonoBehaviour
             int numberOfPrefabs = spawnData[i].numberOfObjects;
             float radius = spawnData[i].radius;
             GameObject prefab = spawnData[i].prefab.gameObject;
-            for (int j = 0; j < numberOfPrefabs - 1; j++)
+            for (int j = 0; j < numberOfPrefabs; j++)
             {
                 float angle = j * Mathf.PI * 2 / numberOfPrefabs;
                 float x = Mathf.Cos(angle) * radius;

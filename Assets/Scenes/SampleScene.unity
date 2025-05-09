@@ -323,9 +323,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 572a5a583457f2a44a6b409400cb9b20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2198670860064197616, guid: 1ae250aa8c81d7044904b60943e183f4, type: 3}
-  numberOfObjects: 12
-  radius: 20
+  spawnData:
+  - {fileID: 11400000, guid: 4207904d7580b974480aa13879a16f7e, type: 2}
+  - {fileID: 11400000, guid: 3281b81b654bfa440be7bde9aa85f874, type: 2}
 --- !u!1 &104612591
 GameObject:
   m_ObjectHideFlags: 0

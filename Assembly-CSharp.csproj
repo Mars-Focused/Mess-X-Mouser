@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\View_Controller.cs" />
     <Compile Include="Assets\Supers\Projectile.cs" />
     <Compile Include="Assets\Scripts\ScripObj Scripts\Test Scriptable Object.cs" />
+    <Compile Include="Assets\Scripts\Sound Manager.cs" />
     <Compile Include="Assets\Scripts\ScripObj Scripts\Circle Spawn Data.cs" />
   </ItemGroup>
   <ItemGroup>

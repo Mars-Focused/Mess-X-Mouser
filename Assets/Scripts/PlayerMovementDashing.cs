@@ -11,6 +11,19 @@ using Assets.Interfaces;
 
 public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
+    // This movement controller could be called FRAPs "frenetic random activity periods" or Zoomies
+    /* TODO'S
+     * - Dev's Adjust how much stamina each thing uses
+     * - Double-Jump Bool
+     * - Tripple-jump Bool
+     * - Air Dash-Jump Bool
+     * - Wall Jump Ability
+     * - Dashing Down/Up Slopes when grounded
+     * - Potential to connect to an audio controller
+     * - Potential to Recieve damage
+     * - Respawn Button & Death Screen
+     * - Double-Jump-Consumed Boleans
+    */
     [Header("Import")]
     public Transform orientation;
     public Transform playerCamOrientation;

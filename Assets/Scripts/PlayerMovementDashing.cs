@@ -25,7 +25,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
      * - Potential to connect to an audio controller
      * - Potential to Recieve damage
      * - Respawn Button & Death Screen
-     * - Fix Stamina refilling while dash-sliding at low Staminal
+     * - DONE: Fix Stamina refilling while dash-sliding at low Staminal
     */
     [Header("Import")]
     public Transform orientation;
@@ -266,7 +266,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     } //"Juice" is aquired by standing still and crouching. like a cat ready to pounce
     private void StaminaRegenerator()
     {
-        if (stamina < maxStamina && grounded && !crouching && dashCdTimer == 0f)
+        if (stamina < maxStamina && grounded && state != MovementState.crouching && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }

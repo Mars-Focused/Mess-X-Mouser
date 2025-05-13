@@ -17,12 +17,15 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
      * - Double-Jump Bool
      * - Tripple-jump Bool
      * - Air Dash-Jump Bool
+     * - Stamina Refill Midair Bool
+     * - Stamina Refill while Damaged Bool
+     * - Double-Jump-Consumed Booleans
      * - Wall Jump Ability
      * - Dashing Down/Up Slopes when grounded
      * - Potential to connect to an audio controller
      * - Potential to Recieve damage
      * - Respawn Button & Death Screen
-     * - Double-Jump-Consumed Boleans
+     * - Fix Stamina refilling while dash-sliding at low Staminal
     */
     [Header("Import")]
     public Transform orientation;

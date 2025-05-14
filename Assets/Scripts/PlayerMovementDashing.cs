@@ -25,7 +25,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
      * - Potential to connect to an audio controller
      * - Potential to Recieve damage
      * - Respawn Button & Death Screen
-     * - DONE: Fix Stamina refilling while dash-sliding at low Staminal
     */
     [Header("Import")]
     public Transform orientation;
@@ -198,16 +197,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (alive)
         {
             TotalProtagControl();
-            /*
-            MyInput();
-            DashUpdates();
-            SpeedControl();
-            StateHandler();
-            StaminaRegenerator();
-            SuperJumpCharger();
-            MomentumHandler();
-            DragHandler();
-            */
         }
         else if (!alive)
         {
@@ -226,7 +215,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         MomentumHandler();
         DragHandler();
     }
-    
 
     private void SuperJumpCharger()
     {

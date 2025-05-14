@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 198b1bb2e7222c244a5e7a52b27a5293, type: 3}
+  m_Name: Box Circle
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1012808875884416869, guid: b5ea1c44c43f5e043ac1ac1c1097c301, type: 3}
+  numberOfObjects: 6
+  radius: 60

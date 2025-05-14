@@ -254,7 +254,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     } //"Juice" is aquired by standing still and crouching. like a cat ready to pounce
     private void StaminaRegenerator()
     {
-        if (stamina < maxStamina && grounded && state != MovementState.crouching && dashCdTimer == 0f)
+        if (stamina < maxStamina && grounded && !Sliding() && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
@@ -367,6 +367,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         else
         {
             return false;
+        }
+    }
+
+    private bool Sliding()
+    {
+        if (rb.velocity.magnitude > WALK_SPEED && state == MovementState.crouching)
+        { 
+            return true;
+        }
+        else 
+        { 
+            return false; 
         }
     }
     private void Crouch(InputAction.CallbackContext context)

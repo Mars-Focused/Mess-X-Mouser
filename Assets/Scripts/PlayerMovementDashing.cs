@@ -41,7 +41,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
-    public float normalJumpHeight = 2.5f;
+    public float normalJumpHeight = 3f;
     public float superJumpHeight = 10f;
     public float superJumpChargeTime = 0.5f;
     public float superJumpJuice;
@@ -104,6 +104,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float MAX_SLOPE_ANGLE = 45f;
 
     private RaycastHit slopeHit;
+    private RaycastHit groundHit;
     private bool exitingSlope;
 
     private bool drag;
@@ -186,13 +187,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void Update()
     {
         // ground check
-        grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
-
-        if (grounded && !mayDoubleJump && !doubleJumpLocked)
-        {
-            mayDoubleJump = true;
-            //Debug.Log("Double Jump Active");
-        }
+        GroundCheck();
 
         if (alive)
         {
@@ -214,6 +209,17 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         SuperJumpCharger();
         MomentumHandler();
         DragHandler();
+    }
+
+    private void GroundCheck()
+    {
+        //grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
+        grounded = Physics.SphereCast(transform.position, 0.5f , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + 0.1f, whatIsGround);
+        if (grounded && !mayDoubleJump && !doubleJumpLocked)
+        {
+            mayDoubleJump = true;
+            //Debug.Log("Double Jump Active");
+        }
     }
 
     private void SuperJumpCharger()
@@ -639,7 +645,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private bool OnSlope()
     {
-        if (Physics.Raycast(transform.position, Vector3.down, out slopeHit, PLAYER_HEIGHT * 0.5f + 0.3f))
+        if (Physics.SphereCast(transform.position, 0.5f , Vector3.down, out slopeHit, PLAYER_HEIGHT * 0.5f + 0.3f))
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             return angle < MAX_SLOPE_ANGLE && angle != 0;

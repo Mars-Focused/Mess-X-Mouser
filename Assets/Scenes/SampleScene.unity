@@ -326,6 +326,7 @@ MonoBehaviour:
   spawnData:
   - {fileID: 11400000, guid: 4207904d7580b974480aa13879a16f7e, type: 2}
   - {fileID: 11400000, guid: 3281b81b654bfa440be7bde9aa85f874, type: 2}
+  - {fileID: 11400000, guid: eef664eddfca316479086fd0533de254, type: 2}
 --- !u!1 &104612591
 GameObject:
   m_ObjectHideFlags: 0
@@ -1148,7 +1149,7 @@ MonoBehaviour:
   jumping: 0
   dashEnd: 0
   dashing: 0
-  staminaRegen: 4
+  staminaRegen: 3
   maxStamina: 3
   maxHealth: 1000
   alive: 0

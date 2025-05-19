@@ -399,6 +399,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 }
                 else
                 {
+                    Debug.Log("Slide Failure Goes Here");
+                    moveSpeed = WALK_SPEED;
                     return;
                 }
             }

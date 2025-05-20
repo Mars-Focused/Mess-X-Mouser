@@ -30,6 +30,10 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public Transform orientation;
     public Transform playerCamOrientation;
 
+    [Header("Ground Check")]
+    public LayerMask whatIsGround;
+    bool grounded;
+
     [Header("Debugging")]
     public MovementState state;
     public float moveSpeed; //These values are changed consistantly
@@ -44,14 +48,14 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float normalJumpHeight = 3f;
     public float superJumpHeight = 10f;
     public float superJumpChargeTime = 0.5f;
-    public float superJumpJuice;
+    private float superJumpJuice;
     public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.1f;
     private readonly float AIR_MULTIPLIER = 0.3f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool readyToJump;
     private float jumpForce;
-    public float normalJumpStamina = 1f;
+    public float doubleJumpStamina = 1f;
     public float superJumpStamina = 1f;
     public bool mayDoubleJump;
     private bool doubleJumpLocked;
@@ -60,15 +64,16 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
+    public float slideStamina = 0.5f;
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;
     private readonly float CROUCH_MULTIPLIER = 0.1f;
     private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
-    private float crouchStamina = 0.5f;
 
     [Header("Dashing")]
+    public float dashStamina = 1;
     private readonly float DASH_END_SPEED_CHANGE = 200f;
     private readonly float DASH_SPEED = 30f;
     private readonly float DASH_SPEED_CHANGE = 10f;
@@ -76,7 +81,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float DASH_DURATION = 0.18f;
     private readonly float superDashDuration = 0.3f;
     private readonly float DASH_END_DURATION = 0.02f;
-    private readonly float DASH_STAMINA = 1;
     private readonly float DASH_CD = 0.21f;
     private float dashCdTimer;
     private Vector3 delayedForceToApply; // Nessesary for Dash to function properly.
@@ -96,10 +100,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public bool alive;
     
     private readonly float PLAYER_HEIGHT = 2f;
-    
-    [Header("Ground Check")]
-    public LayerMask whatIsGround;
-    bool grounded;
    
     private readonly float MAX_SLOPE_ANGLE = 45f;
 
@@ -393,13 +393,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         {
             if (dashing && grounded)
             {
-                if (StaminaCheck(crouchStamina))
+                if (StaminaCheck(slideStamina))
                 {
-                    StaminaConsume(crouchStamina);
+                    StaminaConsume(slideStamina);
                 }
                 else
                 {
-                    Debug.Log("Slide Failure Goes Here");
                     moveSpeed = WALK_SPEED;
                     return;
                 }
@@ -600,9 +599,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (!readyToJump) return;
         if (dashing || !grounded)
         {
-            if (StaminaCheck(normalJumpStamina) && mayDoubleJump)
+            if (StaminaCheck(doubleJumpStamina) && mayDoubleJump)
             {
-                StaminaConsume(normalJumpStamina);
+                StaminaConsume(doubleJumpStamina);
                 LockOutDoubleJump();
                 //Debug.Log("Double Jump Used");
             }
@@ -679,7 +678,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void Dash(InputAction.CallbackContext context)
     {
-        if (dashCdTimer > 0 || !StaminaCheck(DASH_STAMINA)) return;
+        if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
 
         //Transform forwardT;
         //forwardT = orientation;
@@ -704,7 +703,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
         }
 
-        StaminaConsume(DASH_STAMINA);
+        StaminaConsume(dashStamina);
         dashCdTimer = DASH_CD;
         state = MovementState.dashing;
 

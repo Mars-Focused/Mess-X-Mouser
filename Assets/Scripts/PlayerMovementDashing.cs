@@ -13,9 +13,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
     // This movement controller could be called FRAPs "frenetic random activity periods" or Zoomies
     /* TODO'S
-     * - Dev's Adjust how much stamina each thing uses
      * - Double-Jump Bool
-     * - Tripple-jump Bool
      * - Air Dash-Jump Bool
      * - Stamina Refill Midair Bool
      * - Stamina Refill while Damaged Bool

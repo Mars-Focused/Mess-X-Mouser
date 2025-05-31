@@ -36,6 +36,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public MovementState state;
     public float moveSpeed; //These values are changed consistantly
     public float speedChangeFactor; //can be made public to show in inspector for debugging.
+    public bool useGravity;
+    public bool decending;
 
     [Header("Walking")]
     private readonly float WALK_SPEED = 12f;
@@ -86,6 +88,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     [HideInInspector] public bool dashing;
     private bool superDashing;
     private bool maySuperDash = false;
+    private Vector3 usedDashDirection;
 
     [Header("Stamina")]
     public float staminaRegen = 2f;
@@ -111,7 +114,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private bool keepMomentum = false;
-    private bool useGravity;
 
     Vector3 moveDirection;
 
@@ -186,6 +188,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         // ground check
         GroundCheck();
+        decending = GoingDown();
 
         if (alive)
         {
@@ -450,7 +453,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             case MovementState.crouching:
                 desiredMoveSpeed = CROUCH_SPEED;
                 drag = false;
-                useGravity = StickNeutral();
+                useGravity = StickNeutral() || OnSlope();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
@@ -538,25 +541,14 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
         // on slope
-        if (OnSlope() && !exitingSlope)
+        if (grounded && !exitingSlope)
         {
-            rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 20f, ForceMode.Force);
-
-            if (rb.velocity.y > 0)
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            if (crouching)
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f * CROUCH_MULTIPLIER, ForceMode.Force);
+            else 
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
         }
-
-        // DOTO: CONSOLIDATE THIS CODE
-        // while crouching
-        else if (crouching)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * CROUCH_MULTIPLIER, ForceMode.Force);
-
-        // on ground
-        else if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-
-        // in air
-        else if (!grounded)
+        else
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * AIR_MULTIPLIER, ForceMode.Force);
 
         // turn gravity off while on slope
@@ -565,6 +557,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void SpeedControl()
     {
+        if (crouching && OnSlope() && GoingDown()) return;
+
         // limiting speed on slope
         if (OnSlope() && !exitingSlope)
         {
@@ -575,7 +569,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         // limiting speed on ground or in air
         else
         {
-            Vector3 flatVel = GetSlopeMoveDirection();
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
             // limit velocity if needed
             if (flatVel.magnitude > moveSpeed)
@@ -585,6 +579,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             }
         }
 
+    }
+
+    public bool GoingDown()
+    {
+        if (rb.velocity.y < 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void ResetYVel()
@@ -680,26 +686,36 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
         //Transform forwardT;
         //forwardT = orientation;
-        Vector3 usedDashDirection;
 
         if (Juiced() && maySuperDash)
         {
             usedDashDuration = superDashDuration;
             LockOutDoubleJump();
-            Vector3 superDashDirection = GetSuperDashDirection();
+            Vector3 superDashDirection = GetCameraDirection();
             //Debug.Log("Dash Direction: " + superDashDirection.x);
             usedDashDirection = superDashDirection;
             superDashing = true;
             Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
             //Debug.Log("SUPERDASH!!!");
         }
-        else 
+        else if (grounded)
         {
-            usedDashDuration = DASH_DURATION;
-            usedDashDirection = GetDirection(orientation); /// where you're facing (no up or down)
-            Invoke(nameof(DashEnd), DASH_DURATION);
-            Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
+            DashDirector(GetSlopeMoveDirection());
+            //usedDashDuration = DASH_DURATION;
+            //usedDashDirection = GetSlopeMoveDirection();
+            //Invoke(nameof(DashEnd), DASH_DURATION);
+            //Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
         }
+        else
+        {
+            DashDirector(GetDirection(orientation));
+            //usedDashDuration = DASH_DURATION;
+            //usedDashDirection = GetDirection(orientation); /// where you're facing (no up or down)
+            //Invoke(nameof(DashEnd), DASH_DURATION);
+            //Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
+        }
+
+        
 
         StaminaConsume(dashStamina);
         dashCdTimer = DASH_CD;
@@ -715,8 +731,15 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         state = MovementState.dashing;
         DelayedDashForce();
     }
+    private void DashDirector(Vector3 direction)
+    {
+        usedDashDuration = DASH_DURATION;
+        usedDashDirection = direction;
+        Invoke(nameof(DashEnd), DASH_DURATION);
+        Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
+    }
 
-    private Vector3 GetSuperDashDirection()
+    private Vector3 GetCameraDirection()
     {
         Vector3 direction = new Vector3();
         Transform camera = playerCamOrientation;
@@ -739,6 +762,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         returnedVector.y = Mathf.Clamp(vector.y, -300f, 18.9f); // This line limits jump height to prevent player from jumping higher than super Jump. TODO: Add more flexibility
         return returnedVector;
     }
+
     private void DelayedDashForce()
     {
         rb.velocity = Vector3.zero;

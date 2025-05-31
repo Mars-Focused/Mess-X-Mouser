@@ -1138,26 +1138,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 2077229903}
   playerCamOrientation: {fileID: 963194228}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 128
   state: 0
   moveSpeed: 0
   speedChangeFactor: 0
-  normalJumpHeight: 2.5
+  normalJumpHeight: 3
   superJumpHeight: 10
   superJumpChargeTime: 0.5
-  superJumpJuice: 0
-  normalJumpStamina: 1
+  doubleJumpStamina: 1
   superJumpStamina: 1
   mayDoubleJump: 0
   jumping: 0
+  slideStamina: 0
+  dashStamina: 1
   dashEnd: 0
   dashing: 0
   staminaRegen: 3
   maxStamina: 3
   maxHealth: 1000
   alive: 0
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 128
 --- !u!114 &1551504185
 MonoBehaviour:
   m_ObjectHideFlags: 0

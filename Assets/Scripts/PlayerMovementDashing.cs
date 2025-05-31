@@ -575,7 +575,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         // limiting speed on ground or in air
         else
         {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            Vector3 flatVel = GetSlopeMoveDirection();
 
             // limit velocity if needed
             if (flatVel.magnitude > moveSpeed)

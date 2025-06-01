@@ -51,7 +51,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private float superJumpJuice;
     public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.1f;
-    private readonly float AIR_MULTIPLIER = 0.3f;
+    private readonly float AIR_MULTIPLIER = 0.2f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool readyToJump;
     private float jumpForce;
@@ -71,6 +71,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
+    public float gravityAddition;
+    public float slideDownSpeedMultiplier;
+    public float adjustedCrouchSpeed;
 
     [Header("Dashing")]
     public float dashStamina = 1;
@@ -188,7 +191,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         // ground check
         GroundCheck();
-        decending = GoingDown();
+        //decending = GoingDown();
+        CrouchSpeedAdjuster();
 
         if (alive)
         {
@@ -376,7 +380,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             return false;
         }
     }
-
     private bool Sliding()
     {
         if (rb.velocity.magnitude > WALK_SPEED && state == MovementState.crouching)
@@ -451,7 +454,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 if (crouching) state = MovementState.crouching;
                 break;
             case MovementState.crouching:
-                desiredMoveSpeed = CROUCH_SPEED;
+                desiredMoveSpeed = adjustedCrouchSpeed;
                 drag = false;
                 useGravity = StickNeutral() || OnSlope();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
@@ -480,6 +483,20 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 }
                 break;
         }
+    }
+
+    private void CrouchSpeedAdjuster()
+    {
+        if (crouching && OnSlope() && GoingDown())
+        {
+            gravityAddition += slideDownSpeedMultiplier * Time.deltaTime;
+        }
+        else
+        {
+            gravityAddition = 0;
+        }
+
+        adjustedCrouchSpeed = CROUCH_SPEED + gravityAddition;
     }
 
     private void MomentumHandler()
@@ -549,7 +566,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
         }
         else
+        {
             rb.AddForce(moveDirection.normalized * moveSpeed * 10f * AIR_MULTIPLIER, ForceMode.Force);
+        }
 
         // turn gravity off while on slope
         rb.useGravity = useGravity;
@@ -557,7 +576,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void SpeedControl()
     {
-        if (crouching && OnSlope() && GoingDown()) return;
 
         // limiting speed on slope
         if (OnSlope() && !exitingSlope)

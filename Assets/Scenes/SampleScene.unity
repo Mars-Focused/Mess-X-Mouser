@@ -1144,6 +1144,8 @@ MonoBehaviour:
   state: 0
   moveSpeed: 0
   speedChangeFactor: 0
+  useGravity: 0
+  decending: 0
   normalJumpHeight: 3
   superJumpHeight: 10
   superJumpChargeTime: 0.5
@@ -1152,6 +1154,9 @@ MonoBehaviour:
   mayDoubleJump: 0
   jumping: 0
   slideStamina: 0
+  gravityAddition: 0
+  slideDownSpeedMultiplier: 10
+  adjustedCrouchSpeed: 0
   dashStamina: 1
   dashEnd: 0
   dashing: 0

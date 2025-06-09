@@ -679,7 +679,19 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private Vector3 GetSlopeMoveDirection()
     {
-        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+            return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+    }
+
+    private Vector3 GetDirection(Transform forwardT)
+    {
+        Vector3 direction = new Vector3();
+
+        direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
+
+        if (StickNeutral())
+            direction = forwardT.forward;
+
+        return direction.normalized;
     }
 
     public static float Round(float value, int digits)
@@ -716,7 +728,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
             //Debug.Log("SUPERDASH!!!");
         }
-        else if (grounded)
+        else if (grounded && !StickNeutral())
         {
             DashDirector(GetSlopeMoveDirection());
             //usedDashDuration = DASH_DURATION;
@@ -732,8 +744,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             //Invoke(nameof(DashEnd), DASH_DURATION);
             //Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
         }
-
-        
 
         StaminaConsume(dashStamina);
         dashCdTimer = DASH_CD;
@@ -817,15 +827,4 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
-    private Vector3 GetDirection(Transform forwardT)
-    {
-        Vector3 direction = new Vector3();
-
-        direction = forwardT.forward * verticalInput + forwardT.right * horizontalInput;
-
-        if (StickNeutral())
-            direction = forwardT.forward;
-
-        return direction.normalized;
-    }
 }

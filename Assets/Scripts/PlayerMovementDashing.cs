@@ -30,6 +30,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Ground Check")]
     public LayerMask whatIsGround;
+    public float groundCheckLength;
+    public float groundCheckWidth;
     bool grounded;
 
     [Header("Debugging")]
@@ -191,7 +193,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         // ground check
         GroundCheck();
-        //decending = GoingDown();
+        decending = GoingDown();
         CrouchSpeedAdjuster();
 
         if (alive)
@@ -219,7 +221,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void GroundCheck()
     {
         //grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
-        grounded = Physics.SphereCast(transform.position, 0.5f , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + 0.1f, whatIsGround);
+        grounded = Physics.SphereCast(transform.position, groundCheckWidth , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + groundCheckLength, whatIsGround);
         if (grounded && !mayDoubleJump && !doubleJumpLocked)
         {
             mayDoubleJump = true;
@@ -391,6 +393,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             return false; 
         }
     }
+
     private void Crouch(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -455,8 +458,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 break;
             case MovementState.crouching:
                 desiredMoveSpeed = adjustedCrouchSpeed;
-                drag = false;
-                useGravity = StickNeutral() || OnSlope();
+                drag = StickNeutral() && !OnSlope();
+                useGravity = true;
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
@@ -783,11 +786,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         return direction;
     }
 
-    private Vector3 VerticalLimiter(Vector3 vector)
+    private Vector3 VerticalLimiter(Vector3 vector) // This function limits vertical height to prevent player from jumping higher than super Jump with some abilities. TODO: Add more flexibility
     {
         Vector3 returnedVector;
         returnedVector = vector;
-        returnedVector.y = Mathf.Clamp(vector.y, -300f, 18.9f); // This line limits jump height to prevent player from jumping higher than super Jump. TODO: Add more flexibility
+        returnedVector.y = Mathf.Clamp(vector.y, -300f, 18.9f); 
         return returnedVector;
     }
 

@@ -994,7 +994,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520649271}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 3d017520f34ff3945ac83d2f417535cb, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1160,7 +1160,7 @@ MonoBehaviour:
   dashStamina: 1
   dashEnd: 0
   dashing: 0
-  staminaRegen: 2
+  staminaRegen: 1.5
   maxStamina: 3
   maxHealth: 1000
   alive: 0

@@ -382,6 +382,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             return false;
         }
     }
+
     private bool Sliding()
     {
         if (rb.velocity.magnitude > WALK_SPEED && state == MovementState.crouching)
@@ -499,7 +500,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             gravityAddition = 0;
         }
 
-        adjustedCrouchSpeed = CROUCH_SPEED + gravityAddition;
+        adjustedCrouchSpeed = Mathf.Clamp( CROUCH_SPEED + gravityAddition, CROUCH_SPEED, DASH_SPEED);
     }
 
     private void MomentumHandler()

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using Assets.Interfaces;
+using Unity.VisualScripting;
 //using System.Collections.Generic;
 //using TMPro;
 //using System;
@@ -36,10 +37,13 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Debugging")]
     public MovementState state;
+    private bool slidingDown;
     public float moveSpeed; //These values are changed consistantly
+    public float rigidbodySpeed;
     public float speedChangeFactor; //can be made public to show in inspector for debugging.
     public bool useGravity;
     public bool decending;
+
 
     [Header("Walking")]
     private readonly float WALK_SPEED = 12f;
@@ -191,10 +195,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void Update()
     {
-        // ground check
         GroundCheck();
         decending = GoingDown();
         CrouchSpeedAdjuster();
+        rigidbodySpeed = rb.velocity.magnitude;
+        //StartAndEndSlideDown();
 
         if (alive)
         {
@@ -336,6 +341,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             protagControls.Enable();
         }
     }
+
     private void HealthGain(float ammount)
     {
         health += ammount;
@@ -357,7 +363,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (drag == true)
             rb.drag = GROUND_DRAG;
         else
-            rb.drag = 0;
+            rb.drag = 0f;
     }
 
     private void FixedUpdate()
@@ -459,7 +465,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 break;
             case MovementState.crouching:
                 desiredMoveSpeed = adjustedCrouchSpeed;
-                drag = StickNeutral() && !OnSlope();
+                drag = false;
                 useGravity = true;
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
@@ -489,6 +495,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
+    private void StartAndEndSlideDown()
+    {
+        if (!slidingDown && crouching && OnSlope() && GoingDown())
+        {
+            slidingDown = true; 
+        }
+        else
+        {
+            slidingDown = false;
+        }
+    }
+
     private void CrouchSpeedAdjuster()
     {
         if (crouching && OnSlope() && GoingDown())
@@ -500,7 +518,14 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             gravityAddition = 0;
         }
 
-        adjustedCrouchSpeed = Mathf.Clamp( CROUCH_SPEED + gravityAddition, CROUCH_SPEED, DASH_SPEED);
+        if (StickNeutral())
+        {
+            adjustedCrouchSpeed = 0;
+        }
+        else
+        {
+            adjustedCrouchSpeed = Mathf.Clamp(CROUCH_SPEED + gravityAddition, CROUCH_SPEED, DASH_SPEED);
+        }
     }
 
     private void MomentumHandler()
@@ -543,9 +568,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         {
             moveSpeed = Mathf.Lerp(startValue, desiredMoveSpeed, time / difference);
 
-            float boostFactor = speedChangeFactor;
+            float usedSpeedChangeFactor = speedChangeFactor;
 
-            time += Time.deltaTime * boostFactor;
+            time += Time.deltaTime * usedSpeedChangeFactor;
 
             yield return null;
         }
@@ -581,7 +606,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void SpeedControl()
     {
 
-        // limiting speed on slope
+            // limiting speed on slope
         if (OnSlope() && !exitingSlope)
         {
             if (rb.velocity.magnitude > moveSpeed)
@@ -599,6 +624,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 Vector3 limitedVel = flatVel.normalized * moveSpeed;
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
+
         }
 
     }

@@ -197,9 +197,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         GroundCheck();
         decending = GoingDown();
-        CrouchSpeedAdjuster();
         rigidbodySpeed = rb.velocity.magnitude;
-        //StartAndEndSlideDown();
+
+        /*
+        SlidedownSpeedOverride();
+        StartAndEndSlideDown();
+        */
 
         if (alive)
         {
@@ -464,9 +467,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 if (crouching) state = MovementState.crouching;
                 break;
             case MovementState.crouching:
-                desiredMoveSpeed = adjustedCrouchSpeed;
+                desiredMoveSpeed = CROUCH_SPEED;
                 drag = false;
-                useGravity = true;
+                useGravity = OnSlope();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
@@ -495,11 +498,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
+    /*
     private void StartAndEndSlideDown()
     {
         if (!slidingDown && crouching && OnSlope() && GoingDown())
         {
-            slidingDown = true; 
+            slidingDown = true;
         }
         else
         {
@@ -507,7 +511,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
-    private void CrouchSpeedAdjuster()
+    private void SlidedownSpeedOverride()
     {
         if (crouching && OnSlope() && GoingDown())
         {
@@ -527,6 +531,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             adjustedCrouchSpeed = Mathf.Clamp(CROUCH_SPEED + gravityAddition, CROUCH_SPEED, DASH_SPEED);
         }
     }
+    */
 
     private void MomentumHandler()
     {

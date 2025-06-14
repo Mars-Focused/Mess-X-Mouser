@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Large Ramp Circle
   m_EditorClassIdentifier: 
   prefab: {fileID: 3150512938614355163, guid: e6097f8c1082203499494291166cfa7f, type: 3}
-  numberOfObjects: 8
+  numberOfObjects: 12
   radius: 100

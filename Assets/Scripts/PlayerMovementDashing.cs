@@ -762,18 +762,10 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         else if (grounded && !StickNeutral())
         {
             DashDirector(GetSlopeMoveDirection());
-            //usedDashDuration = DASH_DURATION;
-            //usedDashDirection = GetSlopeMoveDirection();
-            //Invoke(nameof(DashEnd), DASH_DURATION);
-            //Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
         }
         else
         {
             DashDirector(GetDirection(orientation));
-            //usedDashDuration = DASH_DURATION;
-            //usedDashDirection = GetDirection(orientation); /// where you're facing (no up or down)
-            //Invoke(nameof(DashEnd), DASH_DURATION);
-            //Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
         }
 
         StaminaConsume(dashStamina);
@@ -790,6 +782,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         state = MovementState.dashing;
         DelayedDashForce();
     }
+
     private void DashDirector(Vector3 direction)
     {
         usedDashDuration = DASH_DURATION;

@@ -15,12 +15,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     // This movement controller could be called FRAPs "frenetic random activity periods" or Zoomies
     /* TODO'S
      * - Double-Jump Bool
-     * - Air Dash-Jump Bool
      * - Stamina Refill Midair Bool
      * - Stamina Refill while Damaged Bool
      * - Double-Jump-Consumed Booleans
-     * - Wall Jump Ability
-     * - Dashing Down/Up Slopes when grounded
      * - Potential to connect to an audio controller
      * - Potential to Recieve damage
      * - Respawn Button & Death Screen
@@ -51,35 +48,40 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
+    public bool dashJumpEnabled = true;
+    public bool airDashJumpEnabled;
     public float normalJumpHeight = 3f;
     public float superJumpHeight = 10f;
     public float superJumpChargeTime = 0.5f;
-    private float superJumpJuice;
+    public float doubleJumpStamina = 1f;
+    public float superJumpStamina = 1f;
     public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.1f;
     private readonly float AIR_MULTIPLIER = 0.2f;
     private readonly float AIR_SPEED_CHANGE = 5f;
-    private bool readyToJump;
-    private float jumpForce;
-    public float doubleJumpStamina = 1f;
-    public float superJumpStamina = 1f;
-    public bool mayDoubleJump;
+    private bool mayDoubleJump;
     private bool doubleJumpLocked;
+    private bool readyToJump;
+    private float superJumpJuice;
+    private float jumpForce;
     private float usedJumpHeight;
     private float usedDashDuration;
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
     public float slideStamina = 0.5f;
+    public float crouchMultiplier = 0.001f;
+    public float slideHandlingAdjust;
+    public float maxSlideHandling;
+    public float minSlideHandling;
+    public float maxHandlingSpeed;
+    public float superJumpSpeedThreshold;
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;
-    private readonly float CROUCH_MULTIPLIER = 0.1f;
     private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
-    public float gravityAddition;
-    public float slideDownSpeedMultiplier;
-    public float adjustedCrouchSpeed;
+    private float adjustedCrouchSpeed;
     private float crouchSpeedChange;
 
     [Header("Dashing")]
@@ -237,7 +239,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void SuperJumpCharger()
     {
-        if (grounded && crouching && moveSpeed <= WALK_SPEED)
+        if (grounded && crouching && rigidbodySpeed <= superJumpSpeedThreshold)
         {
             superJumpJuice += Time.deltaTime;
             superJumpJuice = Mathf.Clamp(superJumpJuice, 0f, superJumpChargeTime);
@@ -271,6 +273,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             return false;
         }
     } //"Juice" is aquired by standing still and crouching. like a cat ready to pounce
+
     private void StaminaRegenerator()
     {
         if (stamina < maxStamina && grounded && !Sliding() && dashCdTimer == 0f)
@@ -310,6 +313,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         return stamina;
     }
+
     public float GetPlayerMaxStamina()
     {
         return maxStamina;
@@ -406,6 +410,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         if (context.started)
         {
+            if (StickNeutral())
+            {
+                ResetVelocity();
+            }
+
             if (dashing && grounded)
             {
                 if (StaminaCheck(slideStamina))
@@ -434,6 +443,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             state = MovementState.walking;
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
         }
+    }
+
+    private void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
     }
 
     private void StateHandler()
@@ -476,7 +490,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 desiredMoveSpeed = DASH_SPEED;
                 speedChangeFactor = DASH_SPEED_CHANGE;
                 drag = false;
-                useGravity = superDashing;
+                useGravity = false;
                 if (!alive) state = MovementState.dead;
                 if (dashEnd) state = MovementState.dashend;
                 break;
@@ -506,6 +520,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         {
             adjustedCrouchSpeed = CROUCH_SPEED;
         }
+    }
+
+    private float CrouchMultiplierAdjustedForSpeed()
+    {
+        // return crouchMultiplier;
+        return Mathf.Lerp(maxSlideHandling, minSlideHandling, Mathf.Pow(Mathf.Clamp01((rigidbodySpeed - maxHandlingSpeed) / (DASH_SPEED + 5 - maxHandlingSpeed)), slideHandlingAdjust));
     }
 
     private void StartAndEndSlideDown()
@@ -591,7 +611,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (grounded && !exitingSlope)
         {
             if (crouching)
-                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f * CROUCH_MULTIPLIER, ForceMode.Force);
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f * CrouchMultiplierAdjustedForSpeed(), ForceMode.Force);
             else 
                 rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
         }
@@ -652,8 +672,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (!readyToJump) return;
         if (dashing || !grounded)
         {
-            if (StaminaCheck(doubleJumpStamina) && mayDoubleJump)
+            if (StaminaCheck(doubleJumpStamina) && mayDoubleJump && dashJumpEnabled)
             {
+                if (dashing && !grounded && !airDashJumpEnabled) return;
                 StaminaConsume(doubleJumpStamina);
                 LockOutDoubleJump();
                 //Debug.Log("Double Jump Used");

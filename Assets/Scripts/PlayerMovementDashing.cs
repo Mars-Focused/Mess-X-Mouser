@@ -80,6 +80,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float gravityAddition;
     public float slideDownSpeedMultiplier;
     public float adjustedCrouchSpeed;
+    private float crouchSpeedChange;
 
     [Header("Dashing")]
     public float dashStamina = 1;
@@ -198,12 +199,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         GroundCheck();
         decending = GoingDown();
         rigidbodySpeed = rb.velocity.magnitude;
-
-        /*
-        SlidedownSpeedOverride();
         StartAndEndSlideDown();
-        */
-
+        CrouchSpeedAdjuster();
+        
         if (alive)
         {
             TotalProtagControl();
@@ -467,7 +465,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 if (crouching) state = MovementState.crouching;
                 break;
             case MovementState.crouching:
-                desiredMoveSpeed = CROUCH_SPEED;
+                desiredMoveSpeed = adjustedCrouchSpeed;
                 drag = false;
                 useGravity = OnSlope();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
@@ -498,7 +496,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
-    /*
+    private void CrouchSpeedAdjuster()
+    {
+        if ( StickNeutral())
+        {
+            adjustedCrouchSpeed = 0;
+        }
+        else
+        {
+            adjustedCrouchSpeed = CROUCH_SPEED;
+        }
+    }
+
     private void StartAndEndSlideDown()
     {
         if (!slidingDown && crouching && OnSlope() && GoingDown())
@@ -510,28 +519,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             slidingDown = false;
         }
     }
-
-    private void SlidedownSpeedOverride()
-    {
-        if (crouching && OnSlope() && GoingDown())
-        {
-            gravityAddition += slideDownSpeedMultiplier * Time.deltaTime;
-        }
-        else
-        {
-            gravityAddition = 0;
-        }
-
-        if (StickNeutral())
-        {
-            adjustedCrouchSpeed = 0;
-        }
-        else
-        {
-            adjustedCrouchSpeed = Mathf.Clamp(CROUCH_SPEED + gravityAddition, CROUCH_SPEED, DASH_SPEED);
-        }
-    }
-    */
 
     private void MomentumHandler()
     {
@@ -575,9 +562,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
             float usedSpeedChangeFactor = speedChangeFactor;
 
-            time += Time.deltaTime * usedSpeedChangeFactor;
+            if (!slidingDown)
+            {
+                time += Time.deltaTime * usedSpeedChangeFactor;
+            }
+            else
+            {
+                time = 0;
+                startValue += Time.deltaTime * usedSpeedChangeFactor * 2f;
+                startValue = Mathf.Clamp(startValue, 0f, DASH_SPEED + 5);
+            }
 
-            yield return null;
+                yield return null;
         }
 
         moveSpeed = desiredMoveSpeed;

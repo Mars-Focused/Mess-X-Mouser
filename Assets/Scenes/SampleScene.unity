@@ -1148,8 +1148,9 @@ MonoBehaviour:
   speedChangeFactor: 10
   useGravity: 0
   decending: 0
-  dashJumpEnabled: 1
-  airDashJumpEnabled: 0
+  enableDashJump: 1
+  enableAirDashJump: 0
+  enableDoubleJump: 1
   normalJumpHeight: 3
   superJumpHeight: 10
   superJumpChargeTime: 0.4
@@ -1157,7 +1158,6 @@ MonoBehaviour:
   superJumpStamina: 1
   jumping: 0
   slideStamina: 0
-  crouchMultiplier: 0.1
   slideHandlingAdjust: 0.2
   maxSlideHandling: 1
   minSlideHandling: 0.01
@@ -1166,6 +1166,7 @@ MonoBehaviour:
   dashStamina: 1
   dashEnd: 0
   dashing: 0
+  enableAirbourneRegen: 0
   staminaRegen: 1.5
   maxStamina: 3
   maxHealth: 1000

@@ -1153,15 +1153,16 @@ MonoBehaviour:
   normalJumpHeight: 3
   superJumpHeight: 10
   superJumpChargeTime: 0.4
-  doubleJumpStamina: 0.5
+  doubleJumpStamina: 1
   superJumpStamina: 1
   jumping: 0
   slideStamina: 0
   crouchMultiplier: 0.1
-  slideHandlingAdjust: 0
+  slideHandlingAdjust: 0.2
   maxSlideHandling: 1
   minSlideHandling: 0.01
-  adjustedCrouchSpeed: 0
+  maxHandlingSpeed: 6
+  superJumpSpeedThreshold: 6
   dashStamina: 1
   dashEnd: 0
   dashing: 0

@@ -48,8 +48,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private readonly float GROUND_DRAG = 4f;
 
     [Header("Jumping")]
-    public bool dashJumpEnabled = true;
-    public bool airDashJumpEnabled;
+    public bool enableDashJump = true;
+    public bool enableAirDashJump;
+    public bool enableDoubleJump;
     public float normalJumpHeight = 3f;
     public float superJumpHeight = 10f;
     public float superJumpChargeTime = 0.5f;
@@ -187,7 +188,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         stamina = maxStamina;
         health = maxHealth;
         alive = true;
-        mayDoubleJump = true;
+        mayDoubleJump = enableDoubleJump;
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
@@ -230,7 +231,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         //grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
         grounded = Physics.SphereCast(transform.position, groundCheckWidth , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + groundCheckLength, whatIsGround);
-        if (grounded && !mayDoubleJump && !doubleJumpLocked)
+        if (grounded && !mayDoubleJump && !doubleJumpLocked && enableDoubleJump)
         {
             mayDoubleJump = true;
             //Debug.Log("Double Jump Active");
@@ -672,12 +673,20 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (!readyToJump) return;
         if (dashing || !grounded)
         {
-            if (StaminaCheck(doubleJumpStamina) && mayDoubleJump && dashJumpEnabled)
+            if (!StaminaCheck(doubleJumpStamina)) return;
+            if (dashing && !grounded && !AirDashJumpChecks())
             {
-                if (dashing && !grounded && !airDashJumpEnabled) return;
+                return;
+            }
+            else if (dashing && DashJumpChecks())
+            {
                 StaminaConsume(doubleJumpStamina);
                 LockOutDoubleJump();
-                //Debug.Log("Double Jump Used");
+            }
+            else if (!grounded && DoubleJumpChecks())
+            {
+                StaminaConsume(doubleJumpStamina);
+                LockOutDoubleJump();
             }
             else 
             {
@@ -709,6 +718,24 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    //Double Jump (ready to jump, mayDoubleJump, enableDoubleJump)
+    //Dash Jump (ready to jump, enableDashJump)
+    //AirDash Jump (all of the above + enableAirDashJump)
+    private bool DoubleJumpChecks()
+    {
+        return (mayDoubleJump && enableDoubleJump);
+    }
+
+    private bool DashJumpChecks()
+    {
+        return (enableDashJump);
+    }
+
+    private bool AirDashJumpChecks()
+    {
+        return (DoubleJumpChecks() && DashJumpChecks() && enableAirDashJump);
     }
 
     private void ResetJump()

@@ -14,12 +14,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
     // This movement controller could be called FRAPs "frenetic random activity periods" or Zoomies
     /* TODO'S
-     * - Double-Jump Bool
-     * - Stamina Refill Midair Bool
-     * - Stamina Refill while Damaged Bool
-     * - Double-Jump-Consumed Booleans
      * - Potential to connect to an audio controller
-     * - Potential to Recieve damage
      * - Respawn Button & Death Screen
     */
     [Header("Import")]
@@ -58,7 +53,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float superJumpStamina = 1f;
     public readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.1f;
-    private readonly float AIR_MULTIPLIER = 0.2f;
+    private readonly float AIR_HANDLING = 0.2f;
     private readonly float AIR_SPEED_CHANGE = 5f;
     private bool mayDoubleJump;
     private bool doubleJumpLocked;
@@ -71,7 +66,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Crouching")]
     public float slideStamina = 0.5f;
-    public float crouchMultiplier = 0.001f;
     public float slideHandlingAdjust;
     public float maxSlideHandling;
     public float minSlideHandling;
@@ -104,6 +98,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private Vector3 usedDashDirection;
 
     [Header("Stamina")]
+    public bool enableAirbourneRegen;
     public float staminaRegen = 2f;
     public float maxStamina = 3f;
     private float stamina;
@@ -277,7 +272,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void StaminaRegenerator()
     {
-        if (stamina < maxStamina && grounded && !Sliding() && dashCdTimer == 0f)
+        if (stamina < maxStamina && RegenWhileAirbourne() && !Sliding() && dashCdTimer == 0f)
         {
             stamina += staminaRegen * Time.deltaTime;
         }
@@ -285,6 +280,18 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (stamina > maxStamina)
         {
             MaxOutStamina();
+        }
+    }
+
+    private bool RegenWhileAirbourne()
+    {
+        if (enableAirbourneRegen)
+        {
+            return true;
+        }
+        else
+        {
+            return grounded;
         }
     }
 
@@ -523,9 +530,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
-    private float CrouchMultiplierAdjustedForSpeed()
+    private float CrouchHandlingAdjustedForSpeed()
     {
-        // return crouchMultiplier;
         return Mathf.Lerp(maxSlideHandling, minSlideHandling, Mathf.Pow(Mathf.Clamp01((rigidbodySpeed - maxHandlingSpeed) / (DASH_SPEED + 5 - maxHandlingSpeed)), slideHandlingAdjust));
     }
 
@@ -612,13 +618,13 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (grounded && !exitingSlope)
         {
             if (crouching)
-                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f * CrouchMultiplierAdjustedForSpeed(), ForceMode.Force);
+                rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f * CrouchHandlingAdjustedForSpeed(), ForceMode.Force);
             else 
                 rb.AddForce(GetSlopeMoveDirection() * moveSpeed * 10f, ForceMode.Force);
         }
         else
         {
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * AIR_MULTIPLIER, ForceMode.Force);
+            rb.AddForce(moveDirection.normalized * moveSpeed * 10f * AIR_HANDLING, ForceMode.Force);
         }
 
         // turn gravity off while on slope
@@ -720,9 +726,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 
-    //Double Jump (ready to jump, mayDoubleJump, enableDoubleJump)
-    //Dash Jump (ready to jump, enableDashJump)
-    //AirDash Jump (all of the above + enableAirDashJump)
     private bool DoubleJumpChecks()
     {
         return (mayDoubleJump && enableDoubleJump);
@@ -843,14 +846,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         Vector3 direction = new Vector3();
         Transform camera = playerCamOrientation;
-        // float horizontalAngle = camera.rotation.y;
-        // float verticalAngle = camera.rotation.x;
-        //Debug.Log("Vertical Angle: " + camera.localEulerAngles.ToString());
-        /*
-        float verticalAngleDegrees = Mathf.Rad2Deg * verticalAngle;
-        verticalAngle = Mathf.Clamp(verticalAngle, -30f, 90f);
-        direction = Quaternion.Euler(horizontalAngle, verticalAngle, 0f).eulerAngles;
-        */
         direction = camera.forward;
         return direction;
     }

@@ -12,6 +12,11 @@ using Unity.VisualScripting;
 
 public class PlayerMovementDashing : MonoBehaviour , IDamageable
 {
+    // This movement controller could be called FRAPs "frenetic random activity periods" or Zoomies
+    /* TODO'S
+     * - Potential to connect to an audio controller
+     * - Respawn Button & Death Screen
+    */
     [Header("Import")]
     public Transform orientation;
     public Transform playerCamOrientation;

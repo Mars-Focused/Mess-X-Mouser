@@ -317,7 +317,7 @@ public partial class @ProtagControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""440a6388-f629-4a2e-8554-b00fc039fcb0"",
-                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -339,7 +339,7 @@ public partial class @ProtagControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""07fe1f19-1902-4ae0-9b7e-87c1b6e3cf78"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -361,7 +361,7 @@ public partial class @ProtagControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""21769496-25c1-4c06-be9a-4a97c47498a5"",
-                    ""path"": ""<XInputController>/leftShoulder"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",

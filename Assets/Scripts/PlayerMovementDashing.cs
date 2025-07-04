@@ -29,13 +29,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Debugging")]
     public MovementState state;
-    private bool slidingDown;
     public float moveSpeed; //These values are changed consistantly
     public float rigidbodySpeed;
     public float speedChangeFactor; //can be made public to show in inspector for debugging.
     public bool useGravity;
     public bool decending;
-
 
     [Header("Walking")]
     private readonly float WALK_SPEED = 12f;
@@ -44,14 +42,14 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Jumping")]
     public bool enableDashJump = true;
-    public bool enableAirDashJump;
-    public bool enableDoubleJump;
+    public bool enableAirDashJump = false;
+    public bool enableDoubleJump = false;
     public float normalJumpHeight = 3f;
     public float superJumpHeight = 10f;
-    public float superJumpChargeTime = 0.5f;
+    public float superJumpChargeTime = 0.4f;
     public float doubleJumpStamina = 1f;
     public float superJumpStamina = 1f;
-    public readonly float CUSTOM_GRAVITY = -18f;
+    private readonly float CUSTOM_GRAVITY = -18f;
     private readonly float JUMP_COOLDOWN = 0.1f;
     private readonly float AIR_HANDLING = 0.2f;
     private readonly float AIR_SPEED_CHANGE = 5f;
@@ -65,12 +63,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     [HideInInspector] public bool jumping;
 
     [Header("Crouching")]
-    public float slideStamina = 0.5f;
-    public float slideHandlingAdjust;
-    public float maxSlideHandling;
-    public float minSlideHandling;
-    public float maxHandlingSpeed;
-    public float superJumpSpeedThreshold;
+    public float slideStamina = 0f;
+    public float slideHandlingAdjust = 0.1f;
+    public float maxSlideHandling = 1f;
+    public float minSlideHandling = 0.01f;
+    public float maxHandlingSpeed = 6;
+    public float superJumpSpeedThreshold = 6;
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;
     private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
@@ -78,6 +76,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private bool crouching;
     private float adjustedCrouchSpeed;
     private float crouchSpeedChange;
+    private bool slidingDown;
 
     [Header("Dashing")]
     public float dashStamina = 1;
@@ -99,7 +98,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     [Header("Stamina")]
     public bool enableAirbourneRegen;
-    public float staminaRegen = 2f;
+    public float staminaRegen = 1.5f;
     public float maxStamina = 3f;
     private float stamina;
 

@@ -74,6 +74,7 @@
     <Compile Include="Assets\Scripts\ScripObj Scripts\Test Scriptable Object.cs" />
     <Compile Include="Assets\Scripts\Sound Manager.cs" />
     <Compile Include="Assets\Scripts\Enemy AI Basic Bunny.cs" />
+    <Compile Include="Assets\Scripts\GameAssets.cs" />
     <Compile Include="Assets\Scripts\ScripObj Scripts\Circle Spawn Data.cs" />
   </ItemGroup>
   <ItemGroup>

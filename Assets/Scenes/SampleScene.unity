@@ -1158,7 +1158,7 @@ MonoBehaviour:
   superJumpStamina: 1
   jumping: 0
   slideStamina: 0
-  slideHandlingAdjust: 0.2
+  slideHandlingAdjust: 0.1
   maxSlideHandling: 1
   minSlideHandling: 0.01
   maxHandlingSpeed: 6
@@ -1635,6 +1635,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1602620453}
   - {fileID: 1447835613}
-  - {fileID: 705507995}
   - {fileID: 1551504181}
+  - {fileID: 705507995}
   - {fileID: 1475860864}

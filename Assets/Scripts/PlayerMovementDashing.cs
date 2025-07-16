@@ -679,26 +679,26 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (dashing || !grounded)
         {
             if (!StaminaCheck(doubleJumpStamina)) return;
-            if (dashing && !grounded && !AirDashJumpChecks())
+            if (dashing && !grounded && !AirDashJumpChecks()) // Air Dash Jump False
             {
                 return;
             }
-            else if (dashing && DashJumpChecks())
+            else if (dashing && DashJumpChecks()) // Dash Jump True (Air or Ground)
             {
                 StaminaConsume(doubleJumpStamina);
                 LockOutDoubleJump();
             }
-            else if (!grounded && DoubleJumpChecks())
+            else if (!grounded && DoubleJumpChecks()) // Double Jump True
             {
                 StaminaConsume(doubleJumpStamina);
                 LockOutDoubleJump();
             }
-            else 
+            else  // Anything else
             {
                 return;
             }
         }
-        if (Juiced()) 
+        if (Juiced()) // Super Jump
         { 
             if (StaminaCheck(superJumpStamina))
             {

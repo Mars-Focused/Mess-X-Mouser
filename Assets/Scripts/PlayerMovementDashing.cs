@@ -723,6 +723,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        SoundManager.PlaySound();
     }
 
     private bool DoubleJumpChecks()

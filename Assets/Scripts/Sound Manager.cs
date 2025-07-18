@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class SoundManager 
 {
-    public static void PlaySount()
+    public static void PlaySound()
     {
         GameObject soundGameObject = new GameObject("sound");
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-        audioSource.PlayOneShot(GameAssets.i.playerAttack);
+        audioSource.PlayOneShot(GameAssets.i.playerJump);
     }
 }

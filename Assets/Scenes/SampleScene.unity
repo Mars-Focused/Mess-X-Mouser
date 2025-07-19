@@ -838,6 +838,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1288968068}
   m_CullTransparentMesh: 1
+--- !u!1 &1347767531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1347767533}
+  - component: {fileID: 1347767532}
+  m_Layer: 0
+  m_Name: Audio Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1347767532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347767531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98ad36ce08ac25b4e8c071f6f01d9206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Player Jump
+    clip: {fileID: 8300000, guid: 73484c61af6de424cb55d1158bd48d5f, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Player Dash
+    clip: {fileID: 8300000, guid: 1ef765ff9488876448e3b782ad8e6c64, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Player Slide
+    clip: {fileID: 8300000, guid: 476a73910af646747b99fa6c70a482ed, type: 3}
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+--- !u!4 &1347767533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1347767531}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.0999999, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1447835611
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,6 +1197,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 2077229903}
   playerCamOrientation: {fileID: 963194228}
+  audioManager: {fileID: 1347767532}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 128
@@ -1561,51 +1622,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1947727333}
   m_CullTransparentMesh: 1
---- !u!1 &2063847805
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2063847807}
-  - component: {fileID: 2063847806}
-  m_Layer: 0
-  m_Name: GameAssets
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2063847806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063847805}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7d51b8155eff854fb2812e768a6ef7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerJump: {fileID: 8300000, guid: 6703847bebced2847aa7fa557349d743, type: 3}
---- !u!4 &2063847807
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063847805}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.0999999, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2077229902
 GameObject:
   m_ObjectHideFlags: 0
@@ -1678,9 +1694,9 @@ RectTransform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1347767533}
   - {fileID: 1602620453}
   - {fileID: 1447835613}
   - {fileID: 1551504181}
   - {fileID: 705507995}
   - {fileID: 1475860864}
-  - {fileID: 2063847807}

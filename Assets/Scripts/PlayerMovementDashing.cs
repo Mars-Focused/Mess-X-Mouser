@@ -20,6 +20,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     [Header("Import")]
     public Transform orientation;
     public Transform playerCamOrientation;
+    public AudioManagerBrackeys audioManager;
 
     [Header("Ground Check")]
     public LayerMask whatIsGround;
@@ -723,7 +724,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        SoundManager.PlaySound();
+        audioManager.Play("Player Jump");
     }
 
     private bool DoubleJumpChecks()
@@ -863,6 +864,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb.velocity = Vector3.zero;
 
         rb.AddForce(VerticalLimiter(delayedForceToApply), ForceMode.Impulse);
+        audioManager.Play("Player Dash");
     }
 
     private void DashEnd()

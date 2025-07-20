@@ -405,7 +405,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private bool Sliding()
     {
         if (rb.velocity.magnitude > WALK_SPEED && state == MovementState.crouching)
-        { 
+        {
+            audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2));
             return true;
         }
         else 
@@ -414,48 +415,10 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
-    private void Crouch(InputAction.CallbackContext context)
+    private float SpeedScaledFromZeroToOne()
     {
-        if (context.started)
-        {
-            if (StickNeutral())
-            {
-                ResetVelocity();
-            }
-
-            if (dashing && grounded)
-            {
-                if (StaminaCheck(slideStamina))
-                {
-                    StaminaConsume(slideStamina);
-                }
-                else
-                {
-                    moveSpeed = WALK_SPEED;
-                    return;
-                }
-            }
-            crouching = true;
-            ResetYVel();
-            rb.AddForce(Vector3.down * CROUCH_DOWN_FORCE, ForceMode.Impulse);
-        }
-
-        if (context.performed && grounded)
-        {
-            state = MovementState.crouching;
-        }
-
-        if (context.canceled)
-        {
-            crouching = false;
-            state = MovementState.walking;
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
-    }
-
-    private void ResetVelocity()
-    {
-        rb.velocity = Vector3.zero;
+        //NOTICE: Any speed below maxHandlingSpeed (6f) is considered a Zero, and DASH_SPEED + 5 (35F) is a 1
+        return Mathf.Clamp01((rigidbodySpeed - maxHandlingSpeed) / (DASH_SPEED + 5 - maxHandlingSpeed));
     }
 
     private void StateHandler()
@@ -483,8 +446,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 useGravity = false;
                 drag = true;
                 if (!alive) state = MovementState.dead;
-                if (!grounded) state = MovementState.air;
                 if (crouching) state = MovementState.crouching;
+                if (!grounded) state = MovementState.air;
                 break;
             case MovementState.crouching:
                 desiredMoveSpeed = adjustedCrouchSpeed;
@@ -500,6 +463,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 drag = false;
                 useGravity = false;
                 if (!alive) state = MovementState.dead;
+                if (crouching) state = MovementState.crouching;
                 if (dashEnd) state = MovementState.dashend;
                 break;
             case MovementState.air:
@@ -518,6 +482,147 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
+    private void Crouch(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            if (StickNeutral())
+            {
+                ResetVelocity();
+            }
+
+            if (dashing && grounded)
+            {
+                if (StaminaCheck(slideStamina))
+                {
+                    StaminaConsume(slideStamina);
+                }
+                else
+                {
+                    moveSpeed = WALK_SPEED;
+                    return;
+                }
+            }
+            ResetYVel();
+            rb.AddForce(Vector3.down * CROUCH_DOWN_FORCE, ForceMode.Impulse);
+            audioManager.Play("Player Slide");
+            crouching = true;
+        }
+
+        if (context.performed && grounded)
+        {
+            state = MovementState.crouching;
+        }
+
+        if (context.canceled)
+        {
+            crouching = false;
+            state = MovementState.walking;
+            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
+            audioManager.Stop("Player Slide");
+        }
+    }
+
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (!readyToJump) return;
+        if (dashing || !grounded)
+        {
+            if (!StaminaCheck(doubleJumpStamina)) return;
+            if (dashing && !grounded && !AirDashJumpChecks()) // Air Dash Jump False
+            {
+                return;
+            }
+            else if (dashing && DashJumpChecks()) // Dash Jump True (Air or Ground)
+            {
+                StaminaConsume(doubleJumpStamina);
+                LockOutDoubleJump();
+            }
+            else if (!grounded && DoubleJumpChecks()) // Double Jump True
+            {
+                StaminaConsume(doubleJumpStamina);
+                LockOutDoubleJump();
+            }
+            else  // Anything else
+            {
+                return;
+            }
+        }
+        if (Juiced()) // Super Jump
+        {
+            if (StaminaCheck(superJumpStamina))
+            {
+                StaminaConsume(superJumpStamina);
+                usedJumpHeight = superJumpHeight;
+                LockOutDoubleJump();
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            usedJumpHeight = normalJumpHeight;
+        }
+        state = MovementState.air;
+        readyToJump = false;
+        exitingSlope = true;
+        jumping = true;
+        jumpForce = Mathf.Sqrt(-2f * usedJumpHeight * Physics.gravity.y); // Typically about 19 for a super Jump
+        Invoke(nameof(ResetJump), JUMP_COOLDOWN);
+        ResetYVel();
+        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        audioManager.Play("Player Jump");
+    }
+
+    private void Dash(InputAction.CallbackContext context)
+    {
+        if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
+
+        //Transform forwardT;
+        //forwardT = orientation;
+
+        if (Juiced() && maySuperDash)
+        {
+            usedDashDuration = superDashDuration;
+            LockOutDoubleJump();
+            Vector3 superDashDirection = GetCameraDirection();
+            //Debug.Log("Dash Direction: " + superDashDirection.x);
+            usedDashDirection = superDashDirection;
+            superDashing = true;
+            Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
+            //Debug.Log("SUPERDASH!!!");
+        }
+        else if (grounded && !StickNeutral())
+        {
+            DashDirector(GetSlopeMoveDirection());
+        }
+        else
+        {
+            DashDirector(GetDirection(orientation));
+        }
+
+        StaminaConsume(dashStamina);
+        dashCdTimer = DASH_CD;
+        state = MovementState.dashing;
+
+        dashing = true;
+
+        //cam.DoFov(dashFov);
+        Vector3 forceToApply = usedDashDirection * DASH_FORCE;
+
+        delayedForceToApply = forceToApply;
+        //Invoke(nameof(DelayedDashForce), 0.025f);
+        state = MovementState.dashing;
+        DelayedDashForce();
+    }
+
+    private void ResetVelocity()
+    {
+        rb.velocity = Vector3.zero;
+    }
+
     private void CrouchSpeedAdjuster()
     {
         if ( StickNeutral())
@@ -532,7 +637,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private float CrouchHandlingAdjustedForSpeed()
     {
-        return Mathf.Lerp(maxSlideHandling, minSlideHandling, Mathf.Pow(Mathf.Clamp01((rigidbodySpeed - maxHandlingSpeed) / (DASH_SPEED + 5 - maxHandlingSpeed)), slideHandlingAdjust));
+        return Mathf.Lerp(maxSlideHandling, minSlideHandling, Mathf.Pow(SpeedScaledFromZeroToOne(), slideHandlingAdjust));
     }
 
     private void StartAndEndSlideDown()
@@ -674,59 +779,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
     }
 
-    private void Jump(InputAction.CallbackContext context)
-    {
-        if (!readyToJump) return;
-        if (dashing || !grounded)
-        {
-            if (!StaminaCheck(doubleJumpStamina)) return;
-            if (dashing && !grounded && !AirDashJumpChecks()) // Air Dash Jump False
-            {
-                return;
-            }
-            else if (dashing && DashJumpChecks()) // Dash Jump True (Air or Ground)
-            {
-                StaminaConsume(doubleJumpStamina);
-                LockOutDoubleJump();
-            }
-            else if (!grounded && DoubleJumpChecks()) // Double Jump True
-            {
-                StaminaConsume(doubleJumpStamina);
-                LockOutDoubleJump();
-            }
-            else  // Anything else
-            {
-                return;
-            }
-        }
-        if (Juiced()) // Super Jump
-        { 
-            if (StaminaCheck(superJumpStamina))
-            {
-                StaminaConsume(superJumpStamina);
-                usedJumpHeight = superJumpHeight;
-                LockOutDoubleJump();
-            }
-            else
-            {
-                return;
-            }
-        }
-        else
-        {
-            usedJumpHeight = normalJumpHeight;
-        }
-        state = MovementState.air;
-        readyToJump = false;
-        exitingSlope = true;
-        jumping = true;
-        jumpForce = Mathf.Sqrt(-2f * usedJumpHeight * Physics.gravity.y); // Typically about 19 for a super Jump
-        Invoke(nameof(ResetJump), JUMP_COOLDOWN);
-        ResetYVel();
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        audioManager.Play("Player Jump");
-    }
-
     private bool DoubleJumpChecks()
     {
         return (mayDoubleJump && enableDoubleJump);
@@ -791,48 +843,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
         if (jumping == true || state == MovementState.crouching)
             CancelInvoke(nameof(DashEnd));
-    }
-
-    private void Dash(InputAction.CallbackContext context)
-    {
-        if (dashCdTimer > 0 || !StaminaCheck(dashStamina)) return;
-
-        //Transform forwardT;
-        //forwardT = orientation;
-
-        if (Juiced() && maySuperDash)
-        {
-            usedDashDuration = superDashDuration;
-            LockOutDoubleJump();
-            Vector3 superDashDirection = GetCameraDirection();
-            //Debug.Log("Dash Direction: " + superDashDirection.x);
-            usedDashDirection = superDashDirection;
-            superDashing = true;
-            Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
-            //Debug.Log("SUPERDASH!!!");
-        }
-        else if (grounded && !StickNeutral())
-        {
-            DashDirector(GetSlopeMoveDirection());
-        }
-        else
-        {
-            DashDirector(GetDirection(orientation));
-        }
-
-        StaminaConsume(dashStamina);
-        dashCdTimer = DASH_CD;
-        state = MovementState.dashing;
-
-        dashing = true;
-
-        //cam.DoFov(dashFov);
-        Vector3 forceToApply = usedDashDirection * DASH_FORCE;
-
-        delayedForceToApply = forceToApply;
-        //Invoke(nameof(DelayedDashForce), 0.025f);
-        state = MovementState.dashing;
-        DelayedDashForce();
     }
 
     private void DashDirector(Vector3 direction)

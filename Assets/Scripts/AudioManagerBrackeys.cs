@@ -22,8 +22,25 @@ public class AudioManagerBrackeys : MonoBehaviour
 
     public void Play (string name)
     {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        s.source.pitch = UnityEngine.Random.Range(0.95f, 1.1f);
+        Sound s = FindSoundByName(name);
+        s.source.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
         s.source.Play();
+    }
+
+    public void SetVolume (string name, float volume)
+    {
+        Sound s = FindSoundByName(name);
+        s.source.volume = volume;
+    }
+
+    public void Stop(string name) 
+    {
+        Sound s = FindSoundByName(name);
+        s.source.Stop();
+    }
+
+    private Sound FindSoundByName(string name)
+    {
+        return Array.Find(sounds, sound => sound.name == name);
     }
 }

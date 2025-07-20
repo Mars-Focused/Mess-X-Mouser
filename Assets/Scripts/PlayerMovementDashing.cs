@@ -406,12 +406,11 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         if (rb.velocity.magnitude > WALK_SPEED && state == MovementState.crouching)
         {
-            audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2));
             return true;
         }
         else 
         { 
-            return false; 
+            return false;
         }
     }
 
@@ -453,6 +452,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 desiredMoveSpeed = adjustedCrouchSpeed;
                 drag = false;
                 useGravity = OnSlope();
+                audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;

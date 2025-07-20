@@ -453,6 +453,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 drag = false;
                 useGravity = OnSlope();
                 audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
+                audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f,1.1f,SpeedScaledFromZeroToOne()));
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;

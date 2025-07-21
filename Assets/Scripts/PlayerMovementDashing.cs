@@ -123,6 +123,8 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private float lastDesiredMoveSpeed;
     private bool keepMomentum = false;
     private bool groundedLastFrame;
+    private bool takeOff;
+    private bool touchDown;
 
     Vector3 moveDirection;
 
@@ -196,11 +198,13 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void Update()
     {
+        groundedLastFrame = grounded;
         GroundCheck();
         decending = GoingDown();
         rigidbodySpeed = rb.velocity.magnitude;
         StartAndEndSlideDown();
         CrouchSpeedAdjuster();
+        SlideAudioHandler();
         
         if (alive)
         {
@@ -226,25 +230,37 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void GroundCheck()
     {
-        groundedLastFrame = grounded;
         grounded = Physics.SphereCast(transform.position, groundCheckWidth , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + groundCheckLength, whatIsGround);
         if (grounded && !mayDoubleJump && !doubleJumpLocked && enableDoubleJump)
         {
             mayDoubleJump = true;
             //Debug.Log("Double Jump Active");
         }
+        //Debug.Log("Grounded: " + grounded);
+        TakeOffAndTouchDownChecks();
     }
 
-    private bool TakeOff()
+    private void TakeOffAndTouchDownChecks()
     {
-        if (!grounded && groundedLastFrame) { return true; }
-        else { return true;}
-    }
+        if (!grounded && groundedLastFrame)
+        {
+            Debug.Log("Takeoff True");
+            takeOff =  true;
+        }
+        else
+        {
+            takeOff = false;
+        }
 
-    private bool TouchDown()
-    {
-        if (grounded && !groundedLastFrame) { return true; }
-        else return false;
+        if (grounded && !groundedLastFrame)
+        {
+            Debug.Log("TouchDown True");
+            touchDown = true;
+        }
+        else
+        {
+            touchDown = false;
+        }
     }
 
     private void SuperJumpCharger()
@@ -466,8 +482,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 desiredMoveSpeed = adjustedCrouchSpeed;
                 drag = false;
                 useGravity = OnSlope();
-                audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
-                audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f,1.1f,SpeedScaledFromZeroToOne()));
+                SlideAudioHandler();
                 transform.localScale = new Vector3(transform.localScale.x, CROUCH_Y_SCALE, transform.localScale.z);
                 if (!alive) state = MovementState.dead;
                 if (!grounded) state = MovementState.air;
@@ -526,7 +541,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
         if (context.performed && grounded)
         {
-            state = MovementState.crouching;
+                state = MovementState.crouching;
         }
 
         if (context.canceled)
@@ -536,6 +551,23 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             audioManager.Stop("Player Slide");
         }
+    }
+
+    private void SlideAudioHandler()
+    {
+        if (crouching && touchDown)
+        {
+            audioManager.Play("Player Slide");
+        }
+
+        if (crouching && takeOff)
+        {
+            audioManager.Stop("Player Slide");
+            Debug.Log("SlideAudioHandler stopped slide sound");
+        }
+
+        audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
+        audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f, 1.1f, SpeedScaledFromZeroToOne()));
     }
 
     private void Jump(InputAction.CallbackContext context)

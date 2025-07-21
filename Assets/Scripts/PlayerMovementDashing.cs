@@ -122,6 +122,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     private bool keepMomentum = false;
+    private bool groundedLastFrame;
 
     Vector3 moveDirection;
 
@@ -187,6 +188,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb.freezeRotation = true;
         dashEnd = false;
         dashing = false;
+        groundedLastFrame = true;
         readyToJump = true;
         startYScale = transform.localScale.y;
         Physics.gravity = new Vector3(0f, CUSTOM_GRAVITY, 0f);
@@ -224,13 +226,25 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void GroundCheck()
     {
-        //grounded = Physics.Raycast(transform.position, Vector3.down, PLAYER_HEIGHT * 0.5f + 0.2f, whatIsGround);
+        groundedLastFrame = grounded;
         grounded = Physics.SphereCast(transform.position, groundCheckWidth , Vector3.down, out groundHit, PLAYER_HEIGHT * 0.5f + groundCheckLength, whatIsGround);
         if (grounded && !mayDoubleJump && !doubleJumpLocked && enableDoubleJump)
         {
             mayDoubleJump = true;
             //Debug.Log("Double Jump Active");
         }
+    }
+
+    private bool TakeOff()
+    {
+        if (!grounded && groundedLastFrame) { return true; }
+        else { return true;}
+    }
+
+    private bool TouchDown()
+    {
+        if (grounded && !groundedLastFrame) { return true; }
+        else return false;
     }
 
     private void SuperJumpCharger()

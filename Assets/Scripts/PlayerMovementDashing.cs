@@ -70,9 +70,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float minSlideHandling = 0.01f;
     public float maxHandlingSpeed = 6;
     public float superJumpSpeedThreshold = 6;
+    public float crouchDownForce = 10f; // it's a high number to be able to change direction Mid-air
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;
-    private readonly float CROUCH_DOWN_FORCE = 10f; // it's a high number to be able to change direction Mid-air
     private float startYScale;
     private bool crouching;
     private float adjustedCrouchSpeed;
@@ -234,9 +234,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         if (grounded && !mayDoubleJump && !doubleJumpLocked && enableDoubleJump)
         {
             mayDoubleJump = true;
-            //Debug.Log("Double Jump Active");
         }
-        //Debug.Log("Grounded: " + grounded);
         TakeOffAndTouchDownChecks();
     }
 
@@ -244,7 +242,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     {
         if (!grounded && groundedLastFrame)
         {
-            Debug.Log("Takeoff True");
             takeOff =  true;
         }
         else
@@ -254,7 +251,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
         if (grounded && !groundedLastFrame)
         {
-            Debug.Log("TouchDown True");
             touchDown = true;
         }
         else
@@ -534,9 +530,12 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 }
             }
             ResetYVel();
-            rb.AddForce(Vector3.down * CROUCH_DOWN_FORCE, ForceMode.Impulse);
-            audioManager.Play("Player Slide");
+            rb.AddForce(Vector3.down * crouchDownForce, ForceMode.Impulse);
             crouching = true;
+            if (grounded)
+            {
+                audioManager.Play("Player Slide");
+            }
         }
 
         if (context.performed && grounded)
@@ -551,23 +550,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
             audioManager.Stop("Player Slide");
         }
-    }
-
-    private void SlideAudioHandler()
-    {
-        if (crouching && touchDown)
-        {
-            audioManager.Play("Player Slide");
-        }
-
-        if (crouching && takeOff)
-        {
-            audioManager.Stop("Player Slide");
-            Debug.Log("SlideAudioHandler stopped slide sound");
-        }
-
-        audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
-        audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f, 1.1f, SpeedScaledFromZeroToOne()));
     }
 
     private void Jump(InputAction.CallbackContext context)
@@ -635,11 +617,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             usedDashDuration = superDashDuration;
             LockOutDoubleJump();
             Vector3 superDashDirection = GetCameraDirection();
-            //Debug.Log("Dash Direction: " + superDashDirection.x);
             usedDashDirection = superDashDirection;
             superDashing = true;
             Invoke(nameof(ResetDash), superDashDuration + DASH_END_DURATION);
-            //Debug.Log("SUPERDASH!!!");
         }
         else if (grounded && !StickNeutral())
         {
@@ -685,6 +665,22 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private float CrouchHandlingAdjustedForSpeed()
     {
         return Mathf.Lerp(maxSlideHandling, minSlideHandling, Mathf.Pow(SpeedScaledFromZeroToOne(), slideHandlingAdjust));
+    }
+
+    private void SlideAudioHandler()
+    {
+        if (crouching && touchDown)
+        {
+            audioManager.Play("Player Slide");
+        }
+
+        if (crouching && takeOff)
+        {
+            audioManager.Stop("Player Slide");
+        }
+
+        audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
+        audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f, 1.1f, SpeedScaledFromZeroToOne()));
     }
 
     private void StartAndEndSlideDown()
@@ -926,7 +922,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
 
     private void DashEnd()
     {
-        //Debug.Log("Dashend");
         state = MovementState.dashend;
         dashing = false;
         dashEnd = true;

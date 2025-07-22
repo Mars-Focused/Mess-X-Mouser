@@ -70,7 +70,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float minSlideHandling = 0.01f;
     public float maxHandlingSpeed = 6;
     public float superJumpSpeedThreshold = 6;
-    public float crouchDownForce = 10f; // it's a high number to be able to change direction Mid-air
+    public float crouchDownForce = 20f; // it's a high number to be able to change direction Mid-air
     private float slideVolumeCurve = 2f;
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;

@@ -71,6 +71,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     public float maxHandlingSpeed = 6;
     public float superJumpSpeedThreshold = 6;
     public float crouchDownForce = 10f; // it's a high number to be able to change direction Mid-air
+    private float slideVolumeCurve = 2f;
     private readonly float CROUCH_SPEED = 5f;
     private readonly float CROUCH_Y_SCALE = 0.5f;
     private float startYScale;
@@ -679,7 +680,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             audioManager.Stop("Player Slide");
         }
 
-        audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), 2.5f));
+        audioManager.SetVolume("Player Slide", Mathf.Pow(SpeedScaledFromZeroToOne(), slideVolumeCurve));
         audioManager.SetPitch("Player Slide", Mathf.Lerp(0.7f, 1.1f, SpeedScaledFromZeroToOne()));
     }
 

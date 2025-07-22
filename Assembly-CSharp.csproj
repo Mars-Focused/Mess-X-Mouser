@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Sound Group.cs" />
     <Compile Include="Assets\Scripts\ProtagControls.cs" />
     <Compile Include="Assets\Interfaces\IDamageable.cs" />
+    <Compile Include="Assets\Scripts\Projectile Gun.cs" />
     <Compile Include="Assets\Scripts\HUD Health Bar.cs" />
     <Compile Include="Assets\Scripts\View_Controller.cs" />
     <Compile Include="Assets\Supers\Projectile.cs" />

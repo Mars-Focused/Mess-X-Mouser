@@ -1224,6 +1224,7 @@ MonoBehaviour:
   minSlideHandling: 0.01
   maxHandlingSpeed: 6
   superJumpSpeedThreshold: 6
+  crouchDownForce: 20
   dashStamina: 1
   dashEnd: 0
   dashing: 0

@@ -24,4 +24,16 @@ public class ProjectileGun : MonoBehaviour
         bulletsLeft = magazineSize;
         readyToShoot = true;
     }
+
+    private void oldInputMethod() //Change with New input system
+    {
+        if (allowButtonHold)
+        {
+            shooting = Input.GetKey(KeyCode.Mouse0);
+        }
+        else
+        {
+            shooting = Input.GetKeyDown(KeyCode.Mouse0);
+        }
+    }
 }

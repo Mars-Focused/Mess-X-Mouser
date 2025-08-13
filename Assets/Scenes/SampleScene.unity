@@ -945,11 +945,11 @@ MonoBehaviour:
   bullet: {fileID: 5789288365634917079, guid: 71ca114bdb1fd3c4dbf0006739330799, type: 3}
   shootForce: 300
   upwardForce: 0
-  timeBetweenShooting: 0.1
+  timeBetweenShooting: 0.05
   spread: 0
-  reloadTime: 0.5
+  reloadTime: 1.5
   timeBetweenShots: 0
-  magazineSize: 10
+  magazineSize: 17
   bulletsPerTap: 0
   allowButtonHold: 1
   playerRb: {fileID: 1551504180}

@@ -16,15 +16,15 @@ public class ProjectileGun : MonoBehaviour
     public GameObject bullet;
 
     //bullet force
-    public float shootForce, upwardForce;
+    public float shootForce;
+    public float upwardForce;
 
     //Gun stats
-    public float timeBetweenShooting;
-    public float spread;
+    public float timeBetweenBursts;
     public float reloadTime;
     public float timeBetweenShots;
     public int magazineSize;
-    public int bulletsPerTap;
+    public int bulletsPerBurst;
     public bool allowButtonHold;
 
     int bulletsLeft;
@@ -35,7 +35,9 @@ public class ProjectileGun : MonoBehaviour
     public float recoilForce;
 
     //bools
-    bool shooting, readyToShoot, reloading;
+    bool shooting;
+    bool readyToShoot;
+    bool reloading;
 
     //Reference
     public Camera fpsCam;
@@ -46,7 +48,7 @@ public class ProjectileGun : MonoBehaviour
     public TextMeshProUGUI ammunitionDisplay; //TODO: Add Amunition Display
 
     //bug fixing :D
-    public bool allowInvoke = true;
+    public bool allowResetShot = true;
 
     private void Awake()
     {
@@ -61,7 +63,7 @@ public class ProjectileGun : MonoBehaviour
 
         //Set ammo display, if it exists :D
         if (ammunitionDisplay != null)
-            ammunitionDisplay.SetText(bulletsLeft / bulletsPerTap + " / " + magazineSize / bulletsPerTap);
+            ammunitionDisplay.SetText(bulletsLeft / bulletsPerBurst + " / " + magazineSize / bulletsPerBurst);
     }
     private void OldInputMethod() //TODO: Change to the New Input System
     {
@@ -119,24 +121,24 @@ public class ProjectileGun : MonoBehaviour
         bulletsShot++;
 
         //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
-        if (allowInvoke)
+        if (allowResetShot)
         {
-            Invoke("ResetShot", timeBetweenShooting);
-            allowInvoke = false;
+            Invoke("ResetShot", timeBetweenBursts);
+            allowResetShot = false;
 
             //Add recoil to player (should only be called once)
             playerRb.AddForce(-shotDirection.normalized * recoilForce, ForceMode.Impulse);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function
-        if (bulletsShot < bulletsPerTap && bulletsLeft > 0)
+        if (bulletsShot < bulletsPerBurst && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
     private void ResetShot()
     {
         //Allow shooting and invoking again
         readyToShoot = true;
-        allowInvoke = true;
+        allowResetShot = true;
     }
 
     private void Reload()
@@ -144,7 +146,7 @@ public class ProjectileGun : MonoBehaviour
         reloading = true;
         Invoke("ReloadFinished", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
     }
-    private void ReloadFinished()
+    private void ReloadFinished() //Rename to RefillAmmo
     {
         //Fill magazine
         bulletsLeft = magazineSize;

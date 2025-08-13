@@ -28,7 +28,8 @@ public class ProjectileGun : MonoBehaviour
     public bool allowButtonHold;
 
     public int bulletsLeft;
-    int bulletsShot;
+    int bulletsShotThisBurst;
+    float passiveReloadTimer;
 
     //Recoil
     public Rigidbody playerRb;
@@ -37,7 +38,7 @@ public class ProjectileGun : MonoBehaviour
     //bools
     bool shooting;
     bool readyToShoot;
-    bool reloading;
+    // bool reloading;
 
     //Reference
     public Camera fpsCam;
@@ -65,23 +66,24 @@ public class ProjectileGun : MonoBehaviour
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText(bulletsLeft / bulletsPerBurst + " / " + magazineSize / bulletsPerBurst);
     }
+
     private void OldInputMethod() //TODO: Change to the New Input System
     {
         //Check if allowed to hold down button and take corresponding input
+        // TODO: Change Input system to Handle Auto Vs Semi-Auto
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
         //Reloading 
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
+        // if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
         //Reload automatically when trying to shoot without ammo
-        if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
+        // if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
 
         //Shooting
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot && shooting && bulletsLeft > 0)
         {
-            //Set bullets shot to 0
-            bulletsShot = 0;
-
+            //Handles Burst
+            bulletsShotThisBurst = 0;
             Shoot();
         }
     }
@@ -89,7 +91,10 @@ public class ProjectileGun : MonoBehaviour
     private void Shoot()
     {
         readyToShoot = false;
-        CancelInvoke("Reload");
+
+        //TODO: Look up if there is a "ResetInvokeTimer" Function.
+        CancelInvoke("RefillAmmo");
+        Invoke("RefillAmmo", reloadTime);
 
         //Find the exact hit position using a raycast
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view
@@ -100,7 +105,7 @@ public class ProjectileGun : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
             targetPoint = hit.point;
         else
-            targetPoint = ray.GetPoint(75); //Just a point far away from the player
+            targetPoint = ray.GetPoint(100); //Just a point far away from the player
 
         //Calculate direction from attackPoint to targetPoint
         Vector3 shotDirection = targetPoint - attackPoint.position;
@@ -119,39 +124,41 @@ public class ProjectileGun : MonoBehaviour
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
 
         //Add recoil to player (should only be called once)
+        // TODO: Add Toggle to Add Recoil on Shot or Burst
         playerRb.AddForce(-shotDirection.normalized * knockbackRecoil, ForceMode.Impulse);
 
         bulletsLeft--;
-        bulletsShot++;
+        bulletsShotThisBurst++;
 
         //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
         if (allowResetShot)
         {
-            Invoke("ResetShot", timeBetweenBursts);
             allowResetShot = false;
-
+            Invoke("ResetShot", timeBetweenBursts);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function
-        if (bulletsShot < bulletsPerBurst && bulletsLeft > 0)
+        if (bulletsShotThisBurst < bulletsPerBurst && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
     private void ResetShot()
     {
-        //Allow shooting and invoking again
+        //Allow shooting  another burst
         readyToShoot = true;
         allowResetShot = true;
     }
 
+    /*
     private void Reload()
     {
         reloading = true;
-        Invoke("ReloadFinished", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
+        Invoke("RefillAmmo", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
     }
-    private void ReloadFinished() //Rename to RefillAmmo
+    */
+    private void RefillAmmo() //Rename to RefillAmmo
     {
         //Fill magazine
         bulletsLeft = magazineSize;
-        reloading = false;
+        //reloading = false;
     }
 }

@@ -454,6 +454,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4758481070467558444, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1317220894}
+    - targetCorrespondingSourceObject: {fileID: 4708919952061581963, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
 --- !u!4 &322428194 stripped
 Transform:
@@ -945,20 +948,20 @@ MonoBehaviour:
   bullet: {fileID: 5789288365634917079, guid: 71ca114bdb1fd3c4dbf0006739330799, type: 3}
   shootForce: 300
   upwardForce: 0
-  timeBetweenShooting: 0.05
-  spread: 0
-  reloadTime: 1.5
+  timeBetweenBursts: 0.05
+  reloadTime: 2
   timeBetweenShots: 0
-  magazineSize: 17
-  bulletsPerTap: 0
+  magazineSize: 24
+  bulletsPerBurst: 1
   allowButtonHold: 1
+  bulletsLeft: 0
   playerRb: {fileID: 1551504180}
-  recoilForce: 0
+  knockbackRecoil: 0.2
   fpsCam: {fileID: 963194227}
   attackPoint: {fileID: 1070277794}
   muzzleFlash: {fileID: 0}
   ammunitionDisplay: {fileID: 0}
-  allowInvoke: 1
+  allowResetShot: 1
 --- !u!1 &1347767531
 GameObject:
   m_ObjectHideFlags: 0

@@ -32,7 +32,7 @@ public class ProjectileGun : MonoBehaviour
 
     //Recoil
     public Rigidbody playerRb;
-    public float recoilForce;
+    public float knockbackRecoil;
 
     //bools
     bool shooting;
@@ -118,6 +118,9 @@ public class ProjectileGun : MonoBehaviour
         if (muzzleFlash != null)
             Instantiate(muzzleFlash, attackPoint.position, Quaternion.identity);
 
+        //Add recoil to player (should only be called once)
+        playerRb.AddForce(-shotDirection.normalized * knockbackRecoil, ForceMode.Impulse);
+
         bulletsLeft--;
         bulletsShot++;
 
@@ -127,8 +130,6 @@ public class ProjectileGun : MonoBehaviour
             Invoke("ResetShot", timeBetweenBursts);
             allowResetShot = false;
 
-            //Add recoil to player (should only be called once)
-            playerRb.AddForce(-shotDirection.normalized * recoilForce, ForceMode.Impulse);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function

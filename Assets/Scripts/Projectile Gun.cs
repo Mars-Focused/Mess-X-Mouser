@@ -27,7 +27,7 @@ public class ProjectileGun : MonoBehaviour
     public int bulletsPerBurst;
     public bool allowButtonHold;
 
-    int bulletsLeft;
+    public int bulletsLeft;
     int bulletsShot;
 
     //Recoil
@@ -89,6 +89,7 @@ public class ProjectileGun : MonoBehaviour
     private void Shoot()
     {
         readyToShoot = false;
+        CancelInvoke("Reload");
 
         //Find the exact hit position using a raycast
         Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); //Just a ray through the middle of your current view

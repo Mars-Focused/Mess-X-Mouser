@@ -509,6 +509,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         }
     }
 
+    // Input System Functions
     private void Crouch(InputAction.CallbackContext context)
     {
         if (context.started)

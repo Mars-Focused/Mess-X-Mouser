@@ -67,12 +67,6 @@ public class ProjectileGun : MonoBehaviour
     private void Update()
     {
         OldInputMethod();
-
-        //Set ammo display, if it exists :D
-        /*
-        if (ammunitionDisplay != null)
-            ammunitionDisplay.SetText(bulletsLeft / bulletsPerBurst + " / " + magazineSize / bulletsPerBurst);
-        */
         ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
@@ -82,11 +76,6 @@ public class ProjectileGun : MonoBehaviour
         // TODO: Change Input system to Handle Auto Vs Semi-Auto
         if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
         else shooting = Input.GetKeyDown(KeyCode.Mouse0);
-
-        //Reloading 
-        // if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading) Reload();
-        //Reload automatically when trying to shoot without ammo
-        // if (readyToShoot && shooting && !reloading && bulletsLeft <= 0) Reload();
 
         //Shooting
         if (readyToShoot && shooting && bulletsLeft > 0)
@@ -157,22 +146,14 @@ public class ProjectileGun : MonoBehaviour
     }
     private void ResetShot()
     {
-        //Allow shooting  another burst
+        //Allow shooting another burst
         readyToShoot = true;
         allowResetShot = true;
     }
 
-    /*
-    private void Reload()
-    {
-        reloading = true;
-        Invoke("RefillAmmo", reloadTime); //Invoke ReloadFinished function with your reloadTime as delay
-    }
-    */
-    private void RefillAmmo() //Rename to RefillAmmo
+    private void RefillAmmo() 
     {
         //Fill magazine
         bulletsLeft = magazineSize;
-        //reloading = false;
     }
 }

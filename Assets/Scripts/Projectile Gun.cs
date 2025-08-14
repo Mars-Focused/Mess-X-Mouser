@@ -103,7 +103,7 @@ public class ProjectileGun : MonoBehaviour
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, raycastLayerMask))
         {
             targetPoint = hit.point;
-            Debug.Log("We Hit " + hit.transform.name);
+            //Debug.Log("We Hit " + hit.transform.name);
         }
         else
         {

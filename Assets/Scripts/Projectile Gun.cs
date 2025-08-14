@@ -39,6 +39,8 @@ public class ProjectileGun : MonoBehaviour
     //bools
     bool shooting;
     bool readyToShoot;
+    LayerMask raycastLayerMask;
+
     // bool reloading;
 
     //Reference
@@ -57,6 +59,9 @@ public class ProjectileGun : MonoBehaviour
         //make sure magazine is full
         bulletsLeft = magazineSize;
         readyToShoot = true;
+
+        // Make LayerMask that Ignores Projectiles
+        raycastLayerMask = LayerMask.GetMask("Default", "TransparentFX", "IgnoreRaycast", "Water", "UI", "Ground");
     }
 
     private void Update()
@@ -106,10 +111,15 @@ public class ProjectileGun : MonoBehaviour
 
         //check if ray hits something
         Vector3 targetPoint;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, raycastLayerMask))
+        {
             targetPoint = hit.point;
+            Debug.Log("We Hit " + hit.transform.name);
+        }
         else
-            targetPoint = ray.GetPoint(100); //Just a point far away from the player
+        {
+            targetPoint = ray.GetPoint(3000); //Just a point far away from the player
+        }
 
         //Calculate direction from attackPoint to targetPoint
         Vector3 shotDirection = targetPoint - attackPoint.position;

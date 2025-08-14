@@ -1,6 +1,7 @@
 
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 /// Thanks for downloading my projectile gun script! :D
 /// Feel free to use it in any project you like!
@@ -46,16 +47,19 @@ public class ProjectileGun : MonoBehaviour
     //Reference
     public Camera fpsCam;
     public Transform attackPoint;
+    public ProtagControls protagControls;
+    public InputAction fire;
 
     //Graphics
     public GameObject muzzleFlash; //TODO: Add Muzzle Flash Maybe
-    //public TextMeshProUGUI ammunitionDisplay; //TODO: Add Amunition Display
 
     //bug fixing :D
     public bool allowResetShot = true;
 
     private void Awake()
     {
+        protagControls = new ProtagControls(); // <-Nessesary for NewInput Controller
+
         //make sure magazine is full
         bulletsLeft = magazineSize;
         readyToShoot = true;
@@ -64,21 +68,30 @@ public class ProjectileGun : MonoBehaviour
         raycastLayerMask = LayerMask.GetMask("Default", "TransparentFX", "IgnoreRaycast", "Water", "UI", "Ground");
     }
 
+    private void OnEnable()
+    {
+        fire = protagControls.Player.Fire;
+        fire.Enable();
+        fire.performed += PullTrigger;
+    }
+
+    private void OnDisable()
+    {
+        fire.Disable();
+    }
+
     private void Update()
     {
-        OldInputMethod();
+        // Fire();
         ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
-    private void OldInputMethod() //TODO: Change to the New Input System
+    private void PullTrigger(InputAction.CallbackContext context) //TODO: Change to the New Input System
     {
-        //Check if allowed to hold down button and take corresponding input
         // TODO: Change Input system to Handle Auto Vs Semi-Auto
-        if (allowButtonHold) shooting = Input.GetKey(KeyCode.Mouse0);
-        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
 
         //Shooting
-        if (readyToShoot && shooting && bulletsLeft > 0)
+        if (readyToShoot && bulletsLeft > 0)
         {
             //Handles Burst
             bulletsShotThisBurst = 0;
@@ -153,7 +166,6 @@ public class ProjectileGun : MonoBehaviour
 
     private void RefillAmmo() 
     {
-        //Fill magazine
         bulletsLeft = magazineSize;
     }
 }

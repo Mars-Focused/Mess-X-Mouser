@@ -173,7 +173,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         crouch.canceled += Crouch;
     }
 
-    private void OnDisable() // all controls that need to be disabled for new movement system.
+    private void OnDisable() // all controls that need to be disabled for newInput system.
     {
         move.Disable(); // <-Nessesary for NewInput Controller
         dash.Disable();

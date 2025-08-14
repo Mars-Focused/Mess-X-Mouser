@@ -14,6 +14,7 @@ public class ProjectileGun : MonoBehaviour
 {
     //bullet 
     public GameObject bullet;
+    [SerializeField] GameObject ammoCounter;
 
     //bullet force
     public float shootForce;
@@ -46,7 +47,7 @@ public class ProjectileGun : MonoBehaviour
 
     //Graphics
     public GameObject muzzleFlash; //TODO: Add Muzzle Flash Maybe
-    public TextMeshProUGUI ammunitionDisplay; //TODO: Add Amunition Display
+    //public TextMeshProUGUI ammunitionDisplay; //TODO: Add Amunition Display
 
     //bug fixing :D
     public bool allowResetShot = true;
@@ -63,8 +64,11 @@ public class ProjectileGun : MonoBehaviour
         OldInputMethod();
 
         //Set ammo display, if it exists :D
+        /*
         if (ammunitionDisplay != null)
             ammunitionDisplay.SetText(bulletsLeft / bulletsPerBurst + " / " + magazineSize / bulletsPerBurst);
+        */
+        ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
     private void OldInputMethod() //TODO: Change to the New Input System

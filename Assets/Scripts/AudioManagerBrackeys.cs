@@ -38,10 +38,13 @@ public class AudioManagerBrackeys : MonoBehaviour
         s.source.pitch = pitch;
     }
 
-    public void RandomizePitch(string name)
+    public void RandomizePitch(string name, float deviation = 0.04f)
     {
+        float lowestPitch = 1f - deviation;
+        float highestPitch = 1f + deviation;
+
         Sound s = FindSoundByName(name);
-        s.source.pitch = UnityEngine.Random.Range(0.96f, 1.04f);
+        s.source.pitch = UnityEngine.Random.Range(lowestPitch, highestPitch);
     }
 
     public void Stop(string name) 

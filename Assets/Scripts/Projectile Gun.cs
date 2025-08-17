@@ -130,7 +130,7 @@ public class ProjectileGun : MonoBehaviour
 
         floatMagSize = magazineSize;
 
-        if (bulletsLeft / floatMagSize <= 0.25f)
+        if (bulletsLeft / floatMagSize <= (bulletsPerBurst * 2) / floatMagSize)
         {
             audioManager.SetPitch("Player Shoot", 1.04f);
         }

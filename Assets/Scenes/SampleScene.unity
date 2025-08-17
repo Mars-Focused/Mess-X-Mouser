@@ -960,10 +960,10 @@ MonoBehaviour:
   audioManager: {fileID: 1347767532}
   shootForce: 300
   upwardForce: 0
-  timeBetweenBursts: 0.1
-  reloadTime: 2.5
+  timeBetweenBursts: 0.05
+  reloadTime: 2.1
   timeBetweenShots: 0.05
-  magazineSize: 24
+  magazineSize: 18
   bulletsPerBurst: 3
   allowButtonHold: 0
   bulletsLeft: 0

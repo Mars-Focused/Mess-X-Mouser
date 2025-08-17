@@ -28,7 +28,7 @@ public class ProjectileGun : MonoBehaviour
     public float timeBetweenShots;
     public int magazineSize;
     public int bulletsPerBurst;
-    public bool allowButtonHold;
+    public bool fullAuto;
 
     public int bulletsLeft;
     int bulletsShotThisBurst;
@@ -41,6 +41,7 @@ public class ProjectileGun : MonoBehaviour
     //bools
     bool shooting;
     bool readyToShoot;
+    bool firing;
     LayerMask raycastLayerMask;
 
     // bool reloading;
@@ -75,7 +76,8 @@ public class ProjectileGun : MonoBehaviour
     {
         fire = protagControls.Player.Fire;
         fire.Enable();
-        fire.performed += PullTrigger;
+        fire.started += PullTrigger;
+        fire.canceled += PullTrigger;
     }
 
     private void OnDisable()
@@ -85,19 +87,36 @@ public class ProjectileGun : MonoBehaviour
 
     private void Update()
     {
-        // Fire();
+        FiringHandler();
         ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
     private void PullTrigger(InputAction.CallbackContext context) // TODO: Change Input system to Handle Auto Vs Semi-Auto
     {
+        if (context.started) 
+        {
+            firing = true;
+        }
 
+        if (context.canceled) 
+        {
+            firing = false;
+        }
+    }
+
+    private void FiringHandler()
+    {
         //Shooting
-        if (readyToShoot && bulletsLeft > 0)
+        if (readyToShoot && bulletsLeft > 0 && firing)
         {
             //Handles Burst
             bulletsShotThisBurst = 0;
             Shoot();
+
+            if (firing && !fullAuto)
+            {
+                firing = false;
+            }
         }
     }
 
@@ -162,7 +181,7 @@ public class ProjectileGun : MonoBehaviour
         bulletsShotThisBurst++;
 
         //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
-        if (allowResetShot)
+        if (allowResetShot && bulletsPerBurst == bulletsShotThisBurst)
         {
             allowResetShot = false;
             Invoke("ResetShot", timeBetweenBursts);

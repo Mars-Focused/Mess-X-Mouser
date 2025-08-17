@@ -604,6 +604,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         Invoke(nameof(ResetJump), JUMP_COOLDOWN);
         ResetYVel();
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        audioManager.RandomizePitch("Player Jump");
         audioManager.Play("Player Jump");
     }
 
@@ -919,6 +920,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         rb.velocity = Vector3.zero;
 
         rb.AddForce(VerticalLimiter(delayedForceToApply), ForceMode.Impulse);
+        audioManager.RandomizePitch("Player Dash");
         audioManager.Play("Player Dash");
     }
 

@@ -957,6 +957,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 5789288365634917079, guid: 71ca114bdb1fd3c4dbf0006739330799, type: 3}
   ammoCounter: {fileID: 1768866602}
+  audioManager: {fileID: 1347767532}
   shootForce: 300
   upwardForce: 0
   timeBetweenBursts: 0.1
@@ -970,6 +971,16 @@ MonoBehaviour:
   knockbackRecoil: 0.2
   fpsCam: {fileID: 963194227}
   attackPoint: {fileID: 1070277794}
+  fire:
+    m_Name: Fire
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 2d3de676-7a9c-4326-b258-7ff38de88108
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  floatMagSize: 0
   muzzleFlash: {fileID: 0}
   allowResetShot: 1
 --- !u!1 &1347767531
@@ -1015,6 +1026,16 @@ MonoBehaviour:
   - name: Player Slide
     clip: {fileID: 8300000, guid: 476a73910af646747b99fa6c70a482ed, type: 3}
     volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: Player Shoot
+    clip: {fileID: 8300000, guid: 3ee27374dd34c8043be53aa60d98aed9, type: 3}
+    volume: 0.8
+    pitch: 1
+    source: {fileID: 0}
+  - name: Player Reload
+    clip: {fileID: 8300000, guid: 1b53bf388036a694c9537d1bbfe78b0c, type: 3}
+    volume: 0.2
     pitch: 1
     source: {fileID: 0}
 --- !u!4 &1347767533
@@ -1903,7 +1924,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 14.799988, y: 14.700012}
+  m_AnchoredPosition: {x: 14.800049, y: 14.700012}
   m_SizeDelta: {x: 350, y: 65}
   m_Pivot: {x: 0, y: 0}
 --- !u!1660057539 &9223372036854775807

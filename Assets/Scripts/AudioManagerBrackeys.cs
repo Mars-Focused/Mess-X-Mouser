@@ -23,7 +23,6 @@ public class AudioManagerBrackeys : MonoBehaviour
     public void Play(string name)
     {
         Sound s = FindSoundByName(name);
-        s.source.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
         s.source.Play();
     }
 
@@ -37,6 +36,12 @@ public class AudioManagerBrackeys : MonoBehaviour
     {
         Sound s = FindSoundByName(name);
         s.source.pitch = pitch;
+    }
+
+    public void RandomizePitch(string name)
+    {
+        Sound s = FindSoundByName(name);
+        s.source.pitch = UnityEngine.Random.Range(0.96f, 1.04f);
     }
 
     public void Stop(string name) 

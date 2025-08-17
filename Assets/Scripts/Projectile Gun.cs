@@ -16,6 +16,7 @@ public class ProjectileGun : MonoBehaviour
     //bullet 
     public GameObject bullet;
     [SerializeField] GameObject ammoCounter;
+    public AudioManagerBrackeys audioManager;
 
     //bullet force
     public float shootForce;
@@ -49,6 +50,8 @@ public class ProjectileGun : MonoBehaviour
     public Transform attackPoint;
     public ProtagControls protagControls;
     public InputAction fire;
+
+    public float floatMagSize;
 
     //Graphics
     public GameObject muzzleFlash; //TODO: Add Muzzle Flash Maybe
@@ -86,9 +89,8 @@ public class ProjectileGun : MonoBehaviour
         ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
-    private void PullTrigger(InputAction.CallbackContext context) //TODO: Change to the New Input System
+    private void PullTrigger(InputAction.CallbackContext context) // TODO: Change Input system to Handle Auto Vs Semi-Auto
     {
-        // TODO: Change Input system to Handle Auto Vs Semi-Auto
 
         //Shooting
         if (readyToShoot && bulletsLeft > 0)
@@ -120,11 +122,24 @@ public class ProjectileGun : MonoBehaviour
         }
         else
         {
-            targetPoint = ray.GetPoint(3000); //Just a point far away from the player
+            targetPoint = ray.GetPoint(75); //Just a point far away from the player
         }
 
         //Calculate direction from attackPoint to targetPoint
         Vector3 shotDirection = targetPoint - attackPoint.position;
+
+        floatMagSize = magazineSize;
+
+        if (bulletsLeft / floatMagSize <= 0.25f)
+        {
+            audioManager.SetPitch("Player Shoot", 1.04f);
+        }
+        else 
+        {
+            audioManager.SetPitch("Player Shoot", 1f);
+        }
+
+        audioManager.Play("Player Shoot");
 
         //Instantiate bullet/projectile
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
@@ -166,6 +181,8 @@ public class ProjectileGun : MonoBehaviour
 
     private void RefillAmmo() 
     {
+        audioManager.Play("Player Reload");
         bulletsLeft = magazineSize;
     }
+
 }

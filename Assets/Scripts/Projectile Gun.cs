@@ -28,7 +28,10 @@ public class ProjectileGun : MonoBehaviour
     public float timeBetweenShots;
     public int magazineSize;
     public int bulletsPerBurst;
+    public float lowAmmoAmt;
+    public bool magDump;
     public bool fullAuto;
+    public bool multiBurst;
 
     public int bulletsLeft;
     int bulletsShotThisBurst;
@@ -91,6 +94,13 @@ public class ProjectileGun : MonoBehaviour
         ammoCounter.GetComponent<TMPro.TMP_Text>().text = "" + bulletsLeft;
     }
 
+    private int UsedBulletsPerBurst()
+    {
+        if (magDump) { return magazineSize; }
+        else if (multiBurst) { return bulletsPerBurst; }
+        else { return 1; }
+    }
+
     private void PullTrigger(InputAction.CallbackContext context) // TODO: Change Input system to Handle Auto Vs Semi-Auto
     {
         if (context.started) 
@@ -149,7 +159,7 @@ public class ProjectileGun : MonoBehaviour
 
         floatMagSize = magazineSize;
 
-        if (bulletsLeft / floatMagSize <= (bulletsPerBurst * 2) / floatMagSize)
+        if (bulletsLeft <= lowAmmoAmt)
         {
             audioManager.SetPitch("Player Shoot", 1.04f);
         }
@@ -181,14 +191,14 @@ public class ProjectileGun : MonoBehaviour
         bulletsShotThisBurst++;
 
         //Invoke resetShot function (if not already invoked), with your timeBetweenShooting
-        if (allowResetShot && bulletsPerBurst == bulletsShotThisBurst)
+        if (allowResetShot && UsedBulletsPerBurst() == bulletsShotThisBurst || bulletsLeft <= 0)
         {
             allowResetShot = false;
             Invoke("ResetShot", timeBetweenBursts);
         }
 
         //if more than one bulletsPerTap make sure to repeat shoot function
-        if (bulletsShotThisBurst < bulletsPerBurst && bulletsLeft > 0)
+        if (bulletsShotThisBurst < UsedBulletsPerBurst() && bulletsLeft > 0)
             Invoke("Shoot", timeBetweenShots);
     }
     private void ResetShot()

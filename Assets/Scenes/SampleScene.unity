@@ -423,15 +423,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3320668092768045681, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3320668092768045681, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3320668092768045681, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3320668092768045681, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -965,7 +965,10 @@ MonoBehaviour:
   timeBetweenShots: 0.05
   magazineSize: 18
   bulletsPerBurst: 3
-  allowButtonHold: 0
+  lowAmmoAmt: 6
+  magDump: 0
+  fullAuto: 1
+  multiBurst: 0
   bulletsLeft: 0
   playerRb: {fileID: 1551504180}
   knockbackRecoil: 0.2

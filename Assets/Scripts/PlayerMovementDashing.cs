@@ -220,9 +220,9 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
     private void TotalProtagControl()
     {
         MyInput();
+        StateHandler();
         DashUpdates();
         SpeedControl();
-        StateHandler();
         StaminaRegenerator();
         SuperJumpCharger();
         MomentumHandler();
@@ -490,7 +490,7 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
                 drag = false;
                 useGravity = false;
                 if (!alive) state = MovementState.dead;
-                if (crouching) state = MovementState.crouching;
+                if (crouching && grounded) state = MovementState.crouching;
                 if (dashEnd) state = MovementState.dashend;
                 break;
             case MovementState.air:
@@ -538,11 +538,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
             {
                 audioManager.Play("Player Slide");
             }
-        }
-
-        if (context.performed && grounded)
-        {
-                state = MovementState.crouching;
         }
 
         if (context.canceled)
@@ -646,6 +641,66 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         //Invoke(nameof(DelayedDashForce), 0.025f);
         state = MovementState.dashing;
         DelayedDashForce();
+    }
+
+    private void DelayedDashForce()
+    {
+        rb.velocity = Vector3.zero;
+
+        rb.AddForce(VerticalLimiter(delayedForceToApply), ForceMode.Impulse);
+        audioManager.RandomizePitch("Player Dash", 0.08f);
+        audioManager.Play("Player Dash");
+    }
+
+    private void DashEnd()
+    {
+        state = MovementState.dashend;
+        dashing = false;
+        dashEnd = true;
+    }
+
+    private void ResetDash()
+    {
+        dashing = false;
+        superDashing = false;
+        dashEnd = false;
+        rb.useGravity = true;
+
+        if (!grounded)
+        {
+            state = MovementState.air;
+        }
+        else if (state == MovementState.crouching)
+        {
+            return;
+        }
+        else
+        {
+            state = MovementState.walking;
+        }
+    }
+
+    private void DashUpdates()
+    {
+        if (dashCdTimer > 0)
+        {
+            dashCdTimer -= Time.deltaTime;
+        }
+
+        dashCdTimer = Mathf.Clamp(dashCdTimer, 0f, maxStamina);
+
+        if (jumping == true || state == MovementState.crouching)
+        {
+            CancelInvoke(nameof(DashEnd));
+        }
+    }
+
+    private void DashDirector(Vector3 direction)
+    {
+        usedDashDuration = DASH_DURATION;
+        usedDashDirection = direction;
+        Invoke(nameof(DashEnd), DASH_DURATION);
+        Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
     }
 
     private void ResetVelocity()
@@ -881,24 +936,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         return Mathf.Round(value * mult) / mult;
     }
 
-    private void DashUpdates()
-    {
-        if (dashCdTimer > 0)
-            dashCdTimer -= Time.deltaTime;
-            dashCdTimer = Mathf.Clamp(dashCdTimer, 0f, maxStamina);
-
-        if (jumping == true || state == MovementState.crouching)
-            CancelInvoke(nameof(DashEnd));
-    }
-
-    private void DashDirector(Vector3 direction)
-    {
-        usedDashDuration = DASH_DURATION;
-        usedDashDirection = direction;
-        Invoke(nameof(DashEnd), DASH_DURATION);
-        Invoke(nameof(ResetDash), DASH_DURATION + DASH_END_DURATION);
-    }
-
     private Vector3 GetCameraDirection()
     {
         Vector3 direction = new Vector3();
@@ -913,43 +950,6 @@ public class PlayerMovementDashing : MonoBehaviour , IDamageable
         returnedVector = vector;
         returnedVector.y = Mathf.Clamp(vector.y, -300f, 18.9f); 
         return returnedVector;
-    }
-
-    private void DelayedDashForce()
-    {
-        rb.velocity = Vector3.zero;
-
-        rb.AddForce(VerticalLimiter(delayedForceToApply), ForceMode.Impulse);
-        audioManager.RandomizePitch("Player Dash", 0.08f);
-        audioManager.Play("Player Dash");
-    }
-
-    private void DashEnd()
-    {
-        state = MovementState.dashend;
-        dashing = false;
-        dashEnd = true;
-    }
-
-    private void ResetDash()
-    {
-        dashing = false;
-        superDashing = false;
-        dashEnd = false;
-        rb.useGravity = true;
-
-        if (!grounded)
-        {
-            state = MovementState.air;
-        }
-        else if (state == MovementState.crouching)
-        {
-            return;
-        }
-        else
-        {
-            state = MovementState.walking;
-        }
     }
 
 }

@@ -1373,7 +1373,7 @@ MonoBehaviour:
   normalJumpHeight: 3
   superJumpHeight: 10
   superJumpChargeTime: 0.4
-  doubleJumpStamina: 1
+  doubleJumpStamina: 0.8
   superJumpStamina: 1
   jumping: 0
   slideStamina: 0

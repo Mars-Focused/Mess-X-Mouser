@@ -1,4 +1,0 @@
-repository "Systemic Shooter@Mars_A@cloud"
-  path "/"
-    br "/main"
-    co "/main"

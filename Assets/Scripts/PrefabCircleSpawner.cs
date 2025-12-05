@@ -9,9 +9,9 @@ public class PreefabCircleSpawner : MonoBehaviour
     [SerializeField] int numberOfObjects;
     [SerializeField] float radius;
     */
-
+    [ContextMenu("GenerateStructures")]
     // Update is called once per frame
-    void Start()
+    void GenerateStructures()
     {
         for (int i = 0; i < spawnData.Length; i++)
         {

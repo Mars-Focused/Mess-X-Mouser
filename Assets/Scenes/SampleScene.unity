@@ -962,7 +962,7 @@ MonoBehaviour:
   upwardForce: 0
   timeBetweenBursts: 0.05
   reloadTime: 2.1
-  timeBetweenShots: 0.05
+  timeBetweenShots: 0.025
   magazineSize: 18
   bulletsPerBurst: 3
   lowAmmoAmt: 6

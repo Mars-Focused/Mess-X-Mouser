@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy_AI2 : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class Enemy_AI2 : MonoBehaviour
     public float retreatDistance;
     public float attackCooldown;
     public float projectileSpeed;
+    public float health = 3;
     public bool readyToAttack;
 
     private Vector3 direction;
@@ -24,10 +26,6 @@ public class Enemy_AI2 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 targetPosition = new Vector3(player.position.x, transform.position.y, player.position.z);
-
-        transform.LookAt(targetPosition);
-
         if (ToFar())
         {
             Pursue();
@@ -79,12 +77,13 @@ public class Enemy_AI2 : MonoBehaviour
 
     private void AttackPlayer()
     {
+        Vector3 targetPosition = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(targetPosition);
         // Attack code goes here
         if (readyToAttack)
         {
             SetAttack();
             Invoke(nameof(ResetAttack), attackCooldown);
-
             // Calculate direction from attackPoint to targetPoint
             direction = player.position - attackPoint.position;
 
@@ -93,5 +92,20 @@ public class Enemy_AI2 : MonoBehaviour
             currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * projectileSpeed, ForceMode.Impulse);
 
         }
+    }
+
+    private void Damage(float damage)
+    {
+        health -= damage;
+
+        if (health < 0)
+        {
+            DestroyThisEnemy();
+        }
+    }
+
+    private void DestroyThisEnemy()
+    {
+        Destroy(gameObject);
     }
 }

@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
+using Assets.Interfaces;
 
-public class Enemy_AI2 : MonoBehaviour
+public class Enemy_AI2 : MonoBehaviour, IDamageable 
 {
     public Transform player;
     public GameObject projectile;
@@ -94,7 +95,7 @@ public class Enemy_AI2 : MonoBehaviour
         }
     }
 
-    private void Damage(float damage)
+    public void Damage(float damage)
     {
         health -= damage;
 

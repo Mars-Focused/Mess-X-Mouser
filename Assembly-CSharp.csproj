@@ -943,6 +943,10 @@
       <Project>{C649F7B6-2770-2086-EA6A-3E373CC31377}</Project>
       <Name>Unity.EditorCoroutines.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.AI.Navigation.csproj">
+      <Project>{DA86A9C4-5B46-C826-81E7-38B47B97A698}</Project>
+      <Name>Unity.AI.Navigation</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Timeline.Editor.csproj">
       <Project>{2360BF29-125F-5BF4-A3D5-D77504E3B7EE}</Project>
       <Name>Unity.Timeline.Editor</Name>
@@ -1023,6 +1027,10 @@
       <Project>{2528DEE3-9D0A-B446-6BCE-83177A14CEE1}</Project>
       <Name>Unity.PlasticSCM.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.AI.Navigation.Updater.csproj">
+      <Project>{D02C78D5-546C-9F8D-B08B-F2BF32500888}</Project>
+      <Name>Unity.AI.Navigation.Updater</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.State.Editor.csproj">
       <Project>{CE10D71A-A173-28AB-E9A8-9B77646DD5F3}</Project>
       <Name>Unity.VisualScripting.State.Editor</Name>
@@ -1035,17 +1043,25 @@
       <Project>{EAADEBC0-16BD-821E-8A3D-F9D13A1DCC0B}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.AI.Navigation.Editor.csproj">
+      <Project>{422372CB-9779-2947-5FF9-616DC5281777}</Project>
+      <Name>Unity.AI.Navigation.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.VisualScripting.State.csproj">
       <Project>{C513254C-17F7-F477-69D0-5DD9346321B2}</Project>
       <Name>Unity.VisualScripting.State</Name>
     </ProjectReference>
-    <ProjectReference Include="Unity.VSCode.Editor.csproj">
-      <Project>{1317D03B-0E7F-3287-2CBB-4034AE5415BF}</Project>
-      <Name>Unity.VSCode.Editor</Name>
+    <ProjectReference Include="Unity.AI.Navigation.Editor.ConversionSystem.csproj">
+      <Project>{A8844C67-76E1-E672-5219-E94C9AA0D704}</Project>
+      <Name>Unity.AI.Navigation.Editor.ConversionSystem</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64.csproj">
       <Project>{54AC71B2-C1ED-9A05-256D-20BBD0916D0F}</Project>
       <Name>Unity.Toolchain.Win-x86_64-Linux-x86_64</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.VSCode.Editor.csproj">
+      <Project>{1317D03B-0E7F-3287-2CBB-4034AE5415BF}</Project>
+      <Name>Unity.VSCode.Editor</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -25,7 +25,8 @@ public class BaseProjectileScript : MonoBehaviour
 
         if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy")
         {
-            var targetScript = collision.gameObject.GetComponent<Enemy_AI2>(); // Change to a seperate Health component.
+            var targetScript = collision.gameObject.GetComponent<PlayerMovementDashing>(); // Change to a seperate Health component.
+
             if (targetScript != null)
             {
                 Debug.Log("Dealt Damage");

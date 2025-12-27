@@ -17,6 +17,8 @@ public class ProjectileGun : MonoBehaviour
     public GameObject bullet;
     [SerializeField] GameObject ammoCounter;
     public AudioManagerBrackeys audioManager;
+    public Collider playerCollider;
+    Collider bulletCollider;
 
     //bullet force
     public float shootForce;
@@ -172,6 +174,13 @@ public class ProjectileGun : MonoBehaviour
 
         //Instantiate bullet/projectile
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
+
+        // Getting the collider of the bullet
+        Collider bulletCollider = currentBullet.GetComponent<Collider>();
+
+        // Ignoring collisions between the projectile and the player.
+        Physics.IgnoreCollision(playerCollider, bulletCollider);
+
         //Rotate bullet to shoot direction
         currentBullet.transform.forward = shotDirection.normalized;
 

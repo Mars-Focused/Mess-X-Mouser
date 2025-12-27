@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7934199188717114900}
   - component: {fileID: 7194751967350305344}
   - component: {fileID: 5611395840537402576}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3822436645397411290}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FlashPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 3321357168263795626}
   - component: {fileID: 5986650713319028468}
   - component: {fileID: 8762515381542611722}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -252,7 +252,7 @@ GameObject:
   - component: {fileID: 1691621961328641979}
   - component: {fileID: 1864517640266267727}
   - component: {fileID: 1183580428327350793}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ammo Count
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3320668092768045681}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlaceHolder Gun
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 892528203499871114}
   - component: {fileID: 1129438038199644023}
   - component: {fileID: 9070506421468090741}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -565,7 +565,7 @@ GameObject:
   - component: {fileID: 2878277061498763013}
   - component: {fileID: 8436518969349999758}
   - component: {fileID: 9089878122090470115}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -672,7 +672,7 @@ GameObject:
   - component: {fileID: 7944905759330754504}
   - component: {fileID: 1473697496191342522}
   - component: {fileID: 8589482287573031568}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Switch
   m_TagString: Untagged
   m_Icon: {fileID: 0}

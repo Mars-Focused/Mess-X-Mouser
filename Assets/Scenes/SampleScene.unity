@@ -6420,6 +6420,7 @@ MonoBehaviour:
   bullet: {fileID: 5789288365634917079, guid: 71ca114bdb1fd3c4dbf0006739330799, type: 3}
   ammoCounter: {fileID: 1768866602}
   audioManager: {fileID: 1347767532}
+  playerCollider: {fileID: 1520649273}
   shootForce: 300
   upwardForce: 0
   timeBetweenBursts: 0.05
@@ -6433,7 +6434,7 @@ MonoBehaviour:
   multiBurst: 0
   bulletsLeft: 0
   playerRb: {fileID: 1551504180}
-  knockbackRecoil: 0.2
+  knockbackRecoil: 0
   fpsCam: {fileID: 963194227}
   attackPoint: {fileID: 1070277794}
   fire:

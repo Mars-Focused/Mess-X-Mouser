@@ -98,6 +98,7 @@ public class Enemy_AI2 : MonoBehaviour, IDamageable
     public void Damage(float damage)
     {
         health -= damage;
+        Debug.Log("Health = " + health);
 
         if (health < 0)
         {

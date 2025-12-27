@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3901081869328893241}
   m_Layer: 0
   m_Name: Placeholder Dust-Bunny
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -156,7 +156,7 @@ GameObject:
   - component: {fileID: 973342613661987913}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 5036745111079418740}
   m_Layer: 0
   m_Name: Glasses
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 1055296020314613570}
   m_Layer: 0
   m_Name: Ears
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -505,7 +505,7 @@ GameObject:
   - component: {fileID: 2804883500295822415}
   m_Layer: 0
   m_Name: Positioner
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -543,7 +543,7 @@ GameObject:
   - component: {fileID: 4970764775092613907}
   m_Layer: 0
   m_Name: Tail
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

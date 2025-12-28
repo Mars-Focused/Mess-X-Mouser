@@ -7806,7 +7806,7 @@ MonoBehaviour:
   enableAirbourneRegen: 0
   staminaRegen: 1.5
   maxStamina: 3
-  maxHealth: 1000
+  maxHealth: 20
   alive: 0
 --- !u!114 &1551504185
 MonoBehaviour:

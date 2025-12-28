@@ -1,3 +1,4 @@
+using Assets.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,22 +18,24 @@ public class BaseProjectileScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Debug.Log(collision.gameObject.GetComponent<IDamageable>());
+
+        /*
         if (collision.gameObject.name != this.name)
         {
             DestroyGameObject();
             Debug.Log("ran Into a " + collision.gameObject.name);
         }
+        */
 
-        if (collision.gameObject.tag == "Player" || collision.gameObject.tag == "Enemy")
+        var targetScript = collision.gameObject.GetComponent<IDamageable>(); // Change to a seperate Health component.
+
+        if (targetScript != null)
         {
-            var targetScript = collision.gameObject.GetComponent<PlayerMovementDashing>(); // Change to a seperate Health component.
-
-            if (targetScript != null)
-            {
-                Debug.Log("Dealt Damage");
-                targetScript.Damage(damage);
-            }
+            // Debug.Log("Dealt Damage");
+            targetScript.Damage(damage);
         }
+        
         DestroyGameObject();
     }
 

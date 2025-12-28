@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Assets.Supers
 {
-    abstract class Enemy : IDamageable
+    abstract class Enemy : MonoBehaviour, IDamageable
     {
         float health;
         float maxHealth;
@@ -25,15 +25,6 @@ namespace Assets.Supers
             this.speed = speed;
         }
 
-        public void Damage(float ammount)
-        {
-            health -= ammount;
-            health = Mathf.Clamp(health, 0, maxHealth);
-            if (health == 0)
-            {
-                alive = false;
-            }
-        }
-
+        public abstract void Damage(float ammount);
     }
 }

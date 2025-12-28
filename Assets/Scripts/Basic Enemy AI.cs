@@ -14,6 +14,7 @@ public class Enemy_AI2 : MonoBehaviour, IDamageable
     public float projectileSpeed;
     public float health = 3;
     public bool readyToAttack;
+    public int bulletDamage;
 
     private Vector3 direction;
 
@@ -89,6 +90,9 @@ public class Enemy_AI2 : MonoBehaviour, IDamageable
             direction = player.position - attackPoint.position;
 
             GameObject currentBullet = Instantiate(projectile, attackPoint.position, Quaternion.identity);
+            BaseProjectileScript script = currentBullet.GetComponent<BaseProjectileScript>();
+            script.SetDamage(bulletDamage);
+            script.SetTeam(tag);
             currentBullet.transform.forward = direction.normalized;
             currentBullet.GetComponent<Rigidbody>().AddForce(direction.normalized * projectileSpeed, ForceMode.Impulse);
 
@@ -100,7 +104,7 @@ public class Enemy_AI2 : MonoBehaviour, IDamageable
         health -= damage;
         Debug.Log("Health = " + health);
 
-        if (health < 0)
+        if (health <= 0)
         {
             DestroyThisEnemy();
         }

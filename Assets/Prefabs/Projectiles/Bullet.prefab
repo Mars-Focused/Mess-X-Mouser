@@ -178,4 +178,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bab8291422ea8b439275097827c65f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  bulletCollider: {fileID: 5370491908333720733}
+  playerCollider: {fileID: 0}

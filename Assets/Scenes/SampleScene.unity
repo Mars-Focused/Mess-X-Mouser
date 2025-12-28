@@ -900,9 +900,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4758481070467558444, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
       propertyPath: m_TagString
-      value: Untagged
+      value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 9089878122090470115, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 9089878122090470115, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+    - {fileID: 8589482287573031568, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+    - {fileID: 5611395840537402576, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+    - {fileID: 9070506421468090741, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
+    - {fileID: 8762515381542611722, guid: 8d4ce0af34ce2d44ab546ad38c137674, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -6421,6 +6430,7 @@ MonoBehaviour:
   ammoCounter: {fileID: 1768866602}
   audioManager: {fileID: 1347767532}
   playerCollider: {fileID: 1520649273}
+  bulletCollider: {fileID: 0}
   shootForce: 300
   upwardForce: 0
   timeBetweenBursts: 0.05
@@ -6449,6 +6459,7 @@ MonoBehaviour:
   floatMagSize: 0
   muzzleFlash: {fileID: 0}
   allowResetShot: 1
+  bulletDamage: 1
 --- !u!1 &1332752969
 GameObject:
   m_ObjectHideFlags: 0
@@ -7702,8 +7713,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1551504181}
-  - component: {fileID: 1551504186}
   - component: {fileID: 1551504180}
+  - component: {fileID: 1551504186}
   - component: {fileID: 1551504184}
   - component: {fileID: 1551504185}
   m_Layer: 0
@@ -7855,7 +7866,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.55
   m_Height: 2.05

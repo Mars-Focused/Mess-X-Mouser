@@ -82,6 +82,7 @@ MonoBehaviour:
   projectileSpeed: 100
   health: 3
   readyToAttack: 0
+  bulletDamage: 2
 --- !u!195 &6780770714291946610
 NavMeshAgent:
   m_ObjectHideFlags: 0

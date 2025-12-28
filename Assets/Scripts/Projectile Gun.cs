@@ -3,14 +3,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
 
-/// Thanks for downloading my projectile gun script! :D
-/// Feel free to use it in any project you like!
-/// 
-/// The code is fully commented but if you still have any questions
-/// don't hesitate to write a yt comment
-/// or use the #coding-problems channel of my discord server
-/// 
-/// Dave
 public class ProjectileGun : MonoBehaviour
 {
     //bullet 
@@ -18,7 +10,7 @@ public class ProjectileGun : MonoBehaviour
     [SerializeField] GameObject ammoCounter;
     public AudioManagerBrackeys audioManager;
     public Collider playerCollider;
-    Collider bulletCollider;
+    public Collider bulletCollider;
 
     //bullet force
     public float shootForce;
@@ -64,6 +56,7 @@ public class ProjectileGun : MonoBehaviour
 
     //bug fixing :D
     public bool allowResetShot = true;
+    public int bulletDamage;
 
     private void Awake()
     {
@@ -136,6 +129,7 @@ public class ProjectileGun : MonoBehaviour
     {
         readyToShoot = false;
 
+
         //TODO: Look up if there is a "ResetInvokeTimer" Function.
         CancelInvoke("RefillAmmo");
         Invoke("RefillAmmo", reloadTime);
@@ -174,6 +168,12 @@ public class ProjectileGun : MonoBehaviour
 
         //Instantiate bullet/projectile
         GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity); //store instantiated bullet in currentBullet
+
+        BaseProjectileScript script = currentBullet.GetComponent<BaseProjectileScript>();
+
+        script.SetDamage(bulletDamage);
+
+        script.SetTeam(tag);
 
         // Getting the collider of the bullet
         Collider bulletCollider = currentBullet.GetComponent<Collider>();
